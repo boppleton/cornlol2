@@ -63,16 +63,15 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
     }
 
-    @Override
-    public void receiveBroadcast(BroadcastMessage message) {
 
+    @Override
+    public void receiveBroadcast(String message) {
         UI.getCurrent().access(new Command() {
             @Override
             public void execute() {
                 System.out.println(message);
             }
         });
-
 
     }
 }
