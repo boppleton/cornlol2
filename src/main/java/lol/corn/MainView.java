@@ -31,6 +31,7 @@ import java.util.List;
 public class MainView extends SplitLayout implements Broadcaster.BroadcastListener {
 
     private static SplitLayout mainSplit = new SplitLayout();
+    private static SplitLayout sideGridSplit = new SplitLayout();
     private static Grid<TradeUni> tradesGrid = new Grid<>();
     private static List<TradeUni> trades = new LinkedList<>();
 
@@ -62,8 +63,17 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         addToPrimary(mainSplit);
         addToSecondary(new Button("bottom")); //put more for footer
 
+
+        sideGridSplit.setSizeFull();
+        sideGridSplit.setOrientation(Orientation.VERTICAL);
+        sideGridSplit.addToPrimary(tradesGrid);
+        sideGridSplit.addToSecondary(new Button("settings"));
+        sideGridSplit.setSplitterPosition(90);
+
+
+
         mainSplit.setSizeFull();
-        mainSplit.addToPrimary(tradesGrid);
+        mainSplit.addToPrimary(sideGridSplit);
         mainSplit.addToSecondary(new ComboBox<String>());
 
         mainSplit.setSplitterPosition(15);
@@ -77,8 +87,6 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
 
             System.out.println("message rec in mainview: " + message);
-
-        System.out.println(" this.getUI().get(): " + this.getUI().get().toString());
 
 
         addTrade(message);
@@ -97,11 +105,14 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         TradeUni t = new TradeUni(exchangeName, side, size, size / price, price);
 
-        getUI().get().accessSynchronously(new Command() {
+        System.out.println("pushconfig: " + getUI().get().getPushConfiguration().toString());
+
+        this.getUI().get().access(new Command() {
             @Override
             public void execute() {
                 trades.add(0, t);
                 tradesGrid.getDataProvider().refreshAll();
+
             }
         });
 
