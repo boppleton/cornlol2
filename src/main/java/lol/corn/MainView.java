@@ -74,11 +74,14 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     @Override
     public void receiveBroadcast(String message) {
 
+
+
             System.out.println("message rec in mainview: " + message);
 
         System.out.println(" this.getUI().get(): " + this.getUI().get().toString());
 
-        this.getUI().get().access((Command) () -> addTrade(message));
+
+        addTrade(message);
 
     }
 
@@ -91,9 +94,18 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         String side = message.substring(message.indexOf("!") + 1, message.lastIndexOf("!"));
         double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
 
-        System.out.println("adding trade..");
-        trades.add(0, new TradeUni(exchangeName, side, size, size / price, price));
-        tradesGrid.getDataProvider().refreshAll();
+
+        TradeUni t = new TradeUni(exchangeName, side, size, size / price, price);
+
+        getUI().get().accessSynchronously(new Command() {
+            @Override
+            public void execute() {
+                trades.add(0, t);
+                tradesGrid.getDataProvider().refreshAll();
+            }
+        });
+
+
 
 
     }
