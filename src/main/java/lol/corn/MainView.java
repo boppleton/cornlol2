@@ -19,6 +19,7 @@ import lol.corn.utils.Broadcaster;
 import lol.corn.utils.WebsocketSetup;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         tradesGrid.addColumn(TradeUni::getPrice).setHeader("Price").setResizable(true);
     }
 
-    private void addTrade(String message) {
+    private void addTrade(String message, boolean update) {
 
         double size = Double.parseDouble(message.substring(message.indexOf("$") + 1, message.lastIndexOf("$")));
         String exchangeName = message.substring(message.indexOf("(") + 1, message.lastIndexOf(")"));
@@ -88,9 +89,11 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
 
         TradeUni t = new TradeUni(exchangeName, "instrument", size, side, price, "timestamp", "id");
+        t.setUpdate(update);
 
         sendTradeUni(t);
     }
+
 
 
 
@@ -102,9 +105,21 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
             getUI().get().access((Command) () -> {
 
-                trades.add(0, t);
-                tradesGrid.getElement().getNode().markAsDirty();
-                tradesGrid.getDataProvider().refreshAll();
+                if (!t.isUpdate()) {
+
+                    trades.add(0, t);
+                    tradesGrid.getElement().getNode().markAsDirty();
+                    tradesGrid.getDataProvider().refreshAll();
+
+                } else {
+                    System.out.println("removing index 0 trade");
+                    trades.remove(0);
+                    System.out.println("adding updated trade");
+                    trades.add(0, t);
+
+                    tradesGrid.getElement().getNode().markAsDirty();
+                    tradesGrid.getDataProvider().refreshAll();
+                }
             });
         }
     }
@@ -121,10 +136,10 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     @Override
     public void receiveBroadcast(String message) {
 
-            addTrade(message);
-
+            addTrade(message, message.substring(0,1).equals("u"));
 
     }
+
 
 
 

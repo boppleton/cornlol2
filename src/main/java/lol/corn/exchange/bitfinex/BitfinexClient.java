@@ -1,6 +1,7 @@
 package lol.corn.exchange.bitfinex;
 
 import lol.corn.exchange.Client;
+import lol.corn.exchange.bitfinex.dto.TradeExecuted;
 import lol.corn.exchange.bitfinex.dto.TradeUpdate;
 import lol.corn.trade.Buncher;
 import lol.corn.trade.TradeUni;
@@ -35,7 +36,7 @@ public class BitfinexClient extends Client {
 //        System.out.println("msg: " + message);
 
 
-        if (message.contains("tu")) {
+        if (message.contains("te")) {
 
             onMessageTrade(message);
 
@@ -58,32 +59,35 @@ public class BitfinexClient extends Client {
 
     private void onMessageTrade(String message) {
 
-        TradeUpdate tu = null;
+        TradeExecuted te = null;
 
         try {
 
             System.out.println("\n\n" + message);
 
-            tu = mapper.readValue(message, TradeUpdate.class);
 
 
-//            System.out.println("+ < " + tu.startNum + tu.tu + " seq:" + tu.seq + " id: " + tu.tradeId + " time: " + tu.timestamp + " price: " + tu.price + " amt: " + tu.amount);
+            te = mapper.readValue(message, TradeExecuted.class);
 
 
-//            System.out.print("trade:");
-//            int amt = 0;
+//            System.out.println("mssg trade: " );
+//            System.out.println("startnum " + te.startNum);
+//            System.out.println("te " + te.te);
 //
-//            for (int i = 0; i < trades.size(); i++) {
-//
-//
+//            System.out.println("seq " + te.seq);
+//            System.out.println("timestamp " + te.timestamp);
+//            System.out.println("price " + te.price);
+//            System.out.println("amount " + te.amount);
+
+
+
             TradeUni t = new TradeUni();
             t.setExchangeName("bitfinex");
             t.setInstrument("btcusd");
-            t.setSize(Math.abs(tu.amount) * tu.price);
-            t.setSide(tu.amount > 0 ? "buy" : "sell");
-            t.setPrice(tu.price);
-            t.setTimestamp(String.valueOf(tu.timestamp));
-            t.setId(String.valueOf(tu.tradeId));
+            t.setSize(Math.abs(te.amount) * te.price);
+            t.setSide(te.amount > 0 ? "buy" : "sell");
+            t.setPrice(te.price);
+            t.setTimestamp(String.valueOf(te.timestamp));
 
             buncher.addToBuncher(t);
 

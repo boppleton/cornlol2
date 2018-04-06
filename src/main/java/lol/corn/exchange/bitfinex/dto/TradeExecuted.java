@@ -12,11 +12,10 @@ public class TradeExecuted {
     public Integer startNum;
     public String te;
 
-//    public String seq;
+    public String seq;
 
-//    public long tradeId;
     public long timestamp;
-    public BigDecimal price;
-    public BigDecimal amount;
+    public double price;
+    public double amount;
 
 }

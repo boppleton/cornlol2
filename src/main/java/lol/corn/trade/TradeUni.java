@@ -15,6 +15,7 @@ public class TradeUni {
     private double price;
     private String timestamp;
     private String id;
+    private boolean update = false;
 
     public TradeUni() {
 
@@ -80,5 +81,9 @@ public class TradeUni {
     // id
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
+
+    // update
+    public boolean isUpdate() { return update; }
+    public void setUpdate(boolean update) { this.update = update; }
 
 }

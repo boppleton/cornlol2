@@ -8,13 +8,20 @@ public class Buncher {
     //trade stream variables
     private static TradeUni bunch = null;
     private static boolean addedThisOne = false;
+    private static boolean inBunchTime = false;
 
-    private static int minimumTrade = 9000;
+    private static int minimumTrade = 50000;
 
     private static long systime;
 
+    private static long addtime;
+
+    private static long lasttime;
+
 //todo: get first and last price to show price movement range with an arrow up or down
     public void addToBuncher(TradeUni trade) {
+
+        System.out.println("added to buncher: " + trade.getExchangeName() + trade.getSize() + trade.getSide() + trade.getTimestamp());
 
         //if no bunch start new one
         if (bunch == null) {
@@ -105,19 +112,52 @@ public class Buncher {
 
         System.out.print("+++ new bunch total: " + (int) bunch.getSize());
 
-        Broadcaster.broadcast("(bitfinex XBTUSDT)!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@");
+        systime = System.currentTimeMillis();
+
+        System.out.println("systime: " + String.valueOf(systime));
+
+        System.out.println("lasttime: " + String.valueOf(lasttime));
+
+        lasttime = System.currentTimeMillis();
+
+        Broadcaster.broadcast("u(bitfinex XBTUSDT)!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@");
 
 
     }
 
-    private void add(TradeUni bunch, TradeUni lastTrade) {
+    private void add(TradeUni bunch, TradeUni lastTrade)  {
 
         bunch.setId(lastTrade.getId());
 
         System.out.print("\n" + bunch.getExchangeName() + " bunch added. id: " + bunch.getId() + " time: " + bunch.getTimestamp() + " side: " + bunch.getSide() + " amt: " + (int) bunch.getSize() + "\n");
 
+//        systime = System.currentTimeMillis();
+//        System.out.println("systime: " + String.valueOf(systime));
+//
+//        addtime = System.currentTimeMillis();
+//        System.out.println("addtime: " + String.valueOf(addtime));
+
+//        lasttime = System.currentTimeMillis();
+//        System.out.println("lasttime: " + String.valueOf(lasttime));
+
+
+//        startAddCheck();
+
+
+
         Broadcaster.broadcast("(bitfinex XBTUSDT)!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@");
 
+
+
+
+    }
+
+    private void startAddCheck() {
+    }
+
+    private void checkTime() throws InterruptedException {
+
+        Thread.sleep(20);
 
 
 
