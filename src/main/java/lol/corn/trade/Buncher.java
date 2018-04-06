@@ -11,6 +11,8 @@ public class Buncher {
 
     private static int minimumTrade = 9000;
 
+    private static long systime;
+
 //todo: get first and last price to show price movement range with an arrow up or down
     public void addToBuncher(TradeUni trade) {
 
@@ -102,6 +104,10 @@ public class Buncher {
         bunch.setId(lastTrade.getId());
 
         System.out.print("+++ new bunch total: " + (int) bunch.getSize());
+
+        Broadcaster.broadcast("(bitfinex XBTUSDT)!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@");
+
+
     }
 
     private void add(TradeUni bunch, TradeUni lastTrade) {

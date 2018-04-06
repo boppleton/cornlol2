@@ -92,6 +92,10 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         sendTradeUni(t);
     }
 
+
+
+
+
     private void sendTradeUni(TradeUni t) {
 
         if (getUI().isPresent()) {
@@ -116,8 +120,13 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
     @Override
     public void receiveBroadcast(String message) {
-        addTrade(message);
+
+            addTrade(message);
+
+
     }
+
+
 
     private void registerBroadcastListener() {
         Broadcaster.register(this);
