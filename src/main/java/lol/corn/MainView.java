@@ -11,11 +11,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.*;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import lol.corn.exchange.binance.BinanceClient;
+import lol.corn.exchange.bitfinex.BitfinexClient;
 import lol.corn.exchange.bitmex.dto.Trade;
 import lol.corn.trade.TradeUni;
 import lol.corn.utils.Broadcaster;
 import lol.corn.utils.WebsocketSetup;
 
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,14 +34,21 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private static Grid<TradeUni> tradesGrid = new Grid<>();
     private static List<TradeUni> trades = new LinkedList<>();
 
-    public MainView() {
+    private static BinanceClient binanceClient;
+    private static BitfinexClient bitfinexClient;
+
+    public MainView() throws URISyntaxException, InterruptedException {
         setupLayout();
 
         setupTradesGrid();
 
         registerBroadcastListener();
 
-        startWebsocket();
+        bitfinexClient = new BitfinexClient();
+        bitfinexClient.connectBlocking();
+        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+
+//        startWebsocket();
 
         setClassName("main-layout");
     }
@@ -66,7 +76,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         tradesGrid.setItems(trades);
         tradesGrid.addColumn(TradeUni::getSize).setHeader("Amount").setResizable(true).setWidth("27%");
-        tradesGrid.addColumn(TradeUni::getPair).setHeader("Instrument").setResizable(true).setWidth("54%");
+        tradesGrid.addColumn(TradeUni::getInstrument).setHeader("Instrument").setResizable(true).setWidth("54%");
         tradesGrid.addColumn(TradeUni::getPrice).setHeader("Price").setResizable(true);
     }
 
@@ -77,7 +87,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         String side = message.substring(message.indexOf("!") + 1, message.lastIndexOf("!"));
         double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
 
-        TradeUni t = new TradeUni(exchangeName, side, size, size / price, price);
+        TradeUni t = new TradeUni(exchangeName, "instrument", size, side, price, "timestamp", "id");
 
         sendTradeUni(t);
     }

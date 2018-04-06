@@ -25,8 +25,6 @@ public class Client extends WebSocketClient {
 
         System.out.println(message);
 
-
-
     }
 
     @Override

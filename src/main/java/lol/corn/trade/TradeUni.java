@@ -8,43 +8,41 @@ public class TradeUni {
         BUY, SELL;
     }
 
-    private String pair;
-
+    private String exchangeName;
+    private String instrument;
     private double size;
-
     private String side;
-
-    public double getBtcAmt() {
-        return btcAmt;
-    }
-
-    public void setBtcAmt(double btcAmt) {
-        this.btcAmt = btcAmt;
-    }
-
-    private double btcAmt;
-
-    private String timestamp;
-
     private double price;
+    private String timestamp;
+    private String id;
 
-    public TradeUni(String exchangeName, String side, double size, double btcAmt, double price) {
-        this.pair = exchangeName;
+    public TradeUni() {
+
+    }
+
+
+    public TradeUni(String exchangeName, String instrument, double size, String side, double price, String timestamp, String id) {
+        this.exchangeName = exchangeName;
+        this.instrument = instrument;
         this.size = size;
         this.side = side;
-        this.btcAmt = btcAmt;
-        this.timestamp = timestamp;
         this.price = price;
+        this.timestamp = timestamp;
+        this.id = id;
+
     }
 
 
+    // exchangName
+    public String getExchangeName() { return exchangeName; }
+    public void setExchangeName(String exchangeName) { this.exchangeName = exchangeName; }
 
-    // exchangeName
-    public String getPair() {
-        return pair;
+    // instrument
+    public String getInstrument() {
+        return instrument;
     }
-    public void setPair(String pair) {
-        this.pair = pair;
+    public void setInstrument(String instrument) {
+        this.instrument = instrument;
     }
 
     // size
@@ -78,5 +76,9 @@ public class TradeUni {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+
+    // id
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
 }
