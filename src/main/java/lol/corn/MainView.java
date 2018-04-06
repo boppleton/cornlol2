@@ -10,7 +10,7 @@ import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.Command;
+import com.vaadin.flow.server.*;
 import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
@@ -19,6 +19,8 @@ import lol.corn.utils.Broadcaster;
 import lol.corn.utils.WebsocketSetup;
 import org.atmosphere.cache.BroadcastMessage;
 
+import javax.swing.*;
+import java.rmi.server.UID;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,9 +44,9 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         setupLayout();
 
         tradesGrid.setItems(trades);
-        tradesGrid.addColumn(TradeUni::getPair).setHeader("pair").setResizable(true);
-        tradesGrid.addColumn(TradeUni::getSize).setHeader("USD value").setResizable(true);
-        tradesGrid.addColumn(TradeUni::getPrice).setHeader("BTC price").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getSize).setHeader("Amount").setResizable(true).setWidth("27%");
+        tradesGrid.addColumn(TradeUni::getPair).setHeader("Instrument").setResizable(true).setWidth("54%");
+        tradesGrid.addColumn(TradeUni::getPrice).setHeader("Price").setResizable(true);
 
 
         Broadcaster.register(this);
@@ -72,11 +74,12 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
 
 
+
         mainSplit.setSizeFull();
         mainSplit.addToPrimary(sideGridSplit);
         mainSplit.addToSecondary(new ComboBox<String>());
 
-        mainSplit.setSplitterPosition(15);
+        mainSplit.setSplitterPosition(17);
 
     }
 
@@ -105,9 +108,9 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         TradeUni t = new TradeUni(exchangeName, side, size, size / price, price);
 
-        System.out.println("pushconfig: " + getUI().get().getPushConfiguration().toString());
+//        System.out.println("pushconfig: " + getUI().get().getPushConfiguration().toString());
 
-        this.getUI().get().access(new Command() {
+       getUI().get().access(new Command() {
             @Override
             public void execute() {
                 trades.add(0, t);
