@@ -11,6 +11,7 @@ import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.Command;
+import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import lol.corn.trade.TradeUni;
@@ -18,6 +19,7 @@ import lol.corn.utils.Broadcaster;
 import lol.corn.utils.WebsocketSetup;
 import org.atmosphere.cache.BroadcastMessage;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -30,22 +32,24 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
     private static SplitLayout mainSplit = new SplitLayout();
     private static Grid<TradeUni> tradesGrid = new Grid<>();
+    private static List<TradeUni> trades = new LinkedList<>();
+
+
 
 
     public MainView() {
         setupLayout();
 
-
-
+        tradesGrid.setItems(trades);
         tradesGrid.addColumn(TradeUni::getPair).setHeader("pair").setResizable(true);
         tradesGrid.addColumn(TradeUni::getSize).setHeader("USD value").setResizable(true);
         tradesGrid.addColumn(TradeUni::getPrice).setHeader("BTC price").setResizable(true);
 
 
-
         Broadcaster.register(this);
 
         startWebsocket();
+
 
 
         setClassName("main-layout");
@@ -70,23 +74,37 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     @Override
     public void receiveBroadcast(String message) {
 
-            this.getUI().get().access(new Command() {
-                @Override
-                public void execute() {
-                    System.out.println("message rec in mainview: " + message);
-                }
-            });
+            System.out.println("message rec in mainview: " + message);
+
+        System.out.println(" this.getUI().get(): " + this.getUI().get().toString());
+
+        this.getUI().get().access((Command) () -> addTrade(message));
+
+    }
+
+    private void addTrade(String message) {
+
+
+        double size = Double.parseDouble(message.substring(message.indexOf("$") + 1, message.lastIndexOf("$")));
+
+        String exchangeName = message.substring(message.indexOf("(") + 1, message.lastIndexOf(")"));
+        String side = message.substring(message.indexOf("!") + 1, message.lastIndexOf("!"));
+        double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
+
+        System.out.println("adding trade..");
+        trades.add(0, new TradeUni(exchangeName, side, size, size / price, price));
+        tradesGrid.getDataProvider().refreshAll();
 
 
     }
 
+
     private void startWebsocket() {
 
-        //start weboscket stream in new thread
-        UI.getCurrent().access(() -> {
             try {
                 WebsocketSetup.startStream();
-            } catch (Exception e) { e.printStackTrace(); }
-        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 }
