@@ -15,6 +15,7 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import lol.corn.trade.TradeUni;
 import lol.corn.utils.Broadcaster;
+import lol.corn.utils.WebsocketSetup;
 import org.atmosphere.cache.BroadcastMessage;
 
 import java.util.List;
@@ -42,8 +43,10 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
 
 
-
         Broadcaster.register(this);
+
+        startWebsocket();
+
 
         setClassName("main-layout");
     }
@@ -66,12 +69,24 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
     @Override
     public void receiveBroadcast(String message) {
-        UI.getCurrent().access(new Command() {
-            @Override
-            public void execute() {
-                System.out.println(message);
-            }
-        });
 
+            this.getUI().get().access(new Command() {
+                @Override
+                public void execute() {
+                    System.out.println("message rec in mainview: " + message);
+                }
+            });
+
+
+    }
+
+    private void startWebsocket() {
+
+        //start weboscket stream in new thread
+        UI.getCurrent().access(() -> {
+            try {
+                WebsocketSetup.startStream();
+            } catch (Exception e) { e.printStackTrace(); }
+        });
     }
 }
