@@ -114,6 +114,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
             @Override
             public void execute() {
                 trades.add(0, t);
+                tradesGrid.getElement().getNode().markAsDirty();
                 tradesGrid.getDataProvider().refreshAll();
 
             }
