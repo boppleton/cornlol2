@@ -9,7 +9,7 @@ public class Buncher {
     private static boolean addedThisOne = false;
     private static boolean inBunchTime = false;
 
-    private static int minimumTrade = 30000;
+    private static int minimumTrade = 1000;
 
     private static long systime;
 

@@ -1,15 +1,12 @@
 package lol.corn;
 
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.*;
 import com.vaadin.flow.theme.Theme;
@@ -22,7 +19,6 @@ import lol.corn.trade.TradeUni;
 import lol.corn.utils.Broadcaster;
 import lol.corn.utils.WebsocketSetup;
 
-import java.awt.*;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -51,21 +47,21 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-        bitfinexClient = new BitfinexClient();
-        bitfinexClient.connectBlocking();
-        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+//        bitfinexClient = new BitfinexClient();
+//        bitfinexClient.connectBlocking();
+//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-        okexClient = new OkexClient();
-        okexClient.connectBlocking();
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+//        okexClient = new OkexClient();
+//        okexClient.connectBlocking();
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
-        WebsocketSetup.bitmexConnect();
-        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+//        WebsocketSetup.bitmexConnect();
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
 
         binanceClient = new BinanceClient("btcusdt@aggTrade");
         binanceClient.connectBlocking();
@@ -83,37 +79,28 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         addToPrimary(mainSplit);
         addToSecondary(new Button("bottom")); //put more for footer
 
-        HorizontalLayout underTickerSettings = new HorizontalLayout();
-        TextField minAmountField = new TextField("minimum trade:");
-        minAmountField.setAutofocus(true);
-        Button settingsButton = new Button("Exchange Settings");
-        underTickerSettings.add(minAmountField, settingsButton);
-
         sideGridSplit.setSizeFull();
         sideGridSplit.setOrientation(Orientation.VERTICAL);
         sideGridSplit.addToPrimary(tradesGrid);
-        sideGridSplit.addToSecondary(underTickerSettings);
+        sideGridSplit.addToSecondary(new Button("settings"));
         sideGridSplit.setSplitterPosition(90);
 
         mainSplit.setSizeFull();
         mainSplit.addToPrimary(sideGridSplit);
         mainSplit.addToSecondary(new ComboBox<String>());
-        mainSplit.setSplitterPosition(20);
+        mainSplit.setSplitterPosition(17);
     }
 
     private void setupTradesGrid() {
 
         tradesGrid.setItems(trades);
-        tradesGrid.addColumn(TradeUni::getSizeFormatted).setHeader("Amount").setResizable(true).setWidth("20%");
-        tradesGrid.addColumn(TradeUni::getExchangeName).setHeader("Exchange").setResizable(true).setWidth("23%");
-        tradesGrid.addColumn(TradeUni::getInstrument).setHeader("Instrument").setResizable(true).setWidth("33%");
-//        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("Trade Price").setResizable(true);
-        tradesGrid.addColumn(TradeUni::getPriceWithGap).setHeader("Price").setResizable(true).setWidth("24%");
-//        tradesGrid.addColumn(TradeUni::getPriceGap).setHeader("Slippage").setResizable(true);
-//        tradesGrid.addColumn(TradeUni::getTimestamp).setHeader("Time").setResizable(true);
-
-
-        tradesGrid.setColumnReorderingAllowed(true);
+        tradesGrid.addColumn(TradeUni::getSizeFormatted).setHeader("Amount").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getExchangeName).setHeader("Exchange").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getInstrument).setHeader("Instrument").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("Trade Price").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getLastPrice).setHeader("Last Price").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getPriceGap).setHeader("Slippage").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getTimestamp).setHeader("Time").setResizable(true);
 
     }
 
