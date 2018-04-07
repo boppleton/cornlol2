@@ -65,9 +65,26 @@ public class BitmexClient extends Client {
 
             for (Trade trade : tradeData) {
 
+                String instrument = null;
+
+                switch (trade.getSymbol()) {
+                    case "XBTUSD":
+                        instrument = "Perp Swap Futures";
+                        break;
+                    case "XBTM18":
+                        instrument = "June Futures";
+                        break;
+                    case "XBTU18":
+                        instrument = "September Futures";
+                        break;
+                    default:
+                        instrument = "invalid instrument";
+                        break;
+                }
+
                 TradeUni t = new TradeUni();
                 t.setExchangeName("bitmex");
-                t.setInstrument(trade.getSymbol());
+                t.setInstrument(instrument);
                 t.setSize(trade.getSize());
                 t.setSide(trade.getSide());
                 t.setPrice(trade.getPrice());

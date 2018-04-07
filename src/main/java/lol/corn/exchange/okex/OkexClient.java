@@ -29,7 +29,7 @@ public class OkexClient extends Client {//todo: remove first pushes by checking 
     public void onMessage(String message) {
 
 
-//        System.out.println(message);
+        System.out.println(message);
 
 //
         if (message.contains("deals\",\"data\":")) {
@@ -67,19 +67,41 @@ public class OkexClient extends Client {//todo: remove first pushes by checking 
 
 
 
-//            System.out.print("trade:");
-//            int amt = 0;
-//
+
+
+
+
             for (int i = 0; i < trades.size(); i++) {
 
+                String instrument = null;
+
+                switch (spots[0].getChannel()) {
+                    case "ok_sub_spot_btc_usdt_deals":
+                        instrument = "spot BTCUSDT";
+                        break;
+                    case "ok_sub_futureusd_btc_trade_this_week":
+                        instrument = "Futures (this week) BTCUSDT";
+                        break;
+                    case "ok_sub_futureusd_btc_trade_next_week":
+                        instrument = "Futures (next week) BTCUSDT";
+                        break;
+                    case "ok_sub_futureusd_btc_trade_quarter":
+                        instrument = "Futures (quarterly) BTCUSDT";
+                        break;
+                    default:
+                        instrument = "invalid instrument";
+                        break;
+                }
 
                     TradeUni t = new TradeUni();
+                t.setExchangeName("okex");
                     t.setSide(trades.get(i).get(4));
                     t.setPrice(Double.valueOf(trades.get(i).get(1)));
+                    t.setInstrument(instrument);
                     t.setSize(message.contains("future") ? (Double.parseDouble(trades.get(i).get(2))*100) : Double.parseDouble(trades.get(i).get(2))* t.getPrice());
                     t.setTimestamp(trades.get(i).get(3));
                     t.setId(trades.get(i).get(0));
-                    t.setExchangeName("okex");
+
                     buncher.addToBuncher(t);
 
 

@@ -9,7 +9,7 @@ public class Buncher {
     private static boolean addedThisOne = false;
     private static boolean inBunchTime = false;
 
-    private static int minimumTrade = 2000;
+    private static int minimumTrade = 100000;
 
     private static long systime;
 
@@ -119,7 +119,7 @@ public class Buncher {
 
         lasttime = System.currentTimeMillis();
 
-        Broadcaster.broadcast("u(" + bunch.getExchangeName() + ")<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*");
+        Broadcaster.broadcast("u%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*");
 
 
     }
@@ -144,7 +144,7 @@ public class Buncher {
 
 
 
-        Broadcaster.broadcast("(" + bunch.getExchangeName() + ")<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*");
+        Broadcaster.broadcast("%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*");
 
 
 

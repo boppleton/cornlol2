@@ -14,6 +14,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import lol.corn.exchange.binance.BinanceClient;
 import lol.corn.exchange.bitfinex.BitfinexClient;
 import lol.corn.exchange.bitmex.dto.Trade;
+import lol.corn.exchange.okex.OkexClient;
 import lol.corn.trade.TradeUni;
 import lol.corn.utils.Broadcaster;
 import lol.corn.utils.WebsocketSetup;
@@ -37,6 +38,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
     private static BinanceClient binanceClient;
     private static BitfinexClient bitfinexClient;
+    private static OkexClient okexClient;
 
     public MainView() throws URISyntaxException, InterruptedException {
         setupLayout();
@@ -45,12 +47,19 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-//        bitfinexClient = new BitfinexClient();
-//        bitfinexClient.connectBlocking();
-//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+        bitfinexClient = new BitfinexClient();
+        bitfinexClient.connectBlocking();
+        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+
+        okexClient = new OkexClient();
+        okexClient.connectBlocking();
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
         WebsocketSetup.bitmexConnect();
-//        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
+        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
         WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
         WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
 
@@ -93,7 +102,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
 
 
-        String exchangeName = message.substring(message.indexOf("(") + 1, message.lastIndexOf(")"));
+        String exchangeName = message.substring(message.indexOf("%") + 1, message.lastIndexOf("%"));
         String instrument = message.substring(message.indexOf("<") + 1, message.lastIndexOf(">"));
         String side = message.substring(message.indexOf("!") + 1, message.lastIndexOf("!"));
         double size = Double.parseDouble(message.substring(message.indexOf("$") + 1, message.lastIndexOf("$")));
