@@ -9,7 +9,7 @@ public class Buncher {
     private static boolean addedThisOne = false;
     private static boolean inBunchTime = false;
 
-    private static int minimumTrade = 5000;
+    private static int minimumTrade = 500000;
 
     private static long systime;
 
@@ -96,7 +96,7 @@ public class Buncher {
         //maybe just be able to set tradeuni from the trade without each .get?
         bunch = new TradeUni(trade.getExchangeName(), trade.getInstrument(), trade.getSize(), trade.getSide(), trade.getPrice(), trade.getTimestamp(), trade.getId());
 
-        bunch.
+        bunch.setFirstPrice(trade.getPrice());
 
         //if bunch over min, send it and clear
         if (bunch.getSize() >= minimumTrade) {
@@ -111,6 +111,9 @@ public class Buncher {
 
         bunch.setId(lastTrade.getId());
 
+        bunch.setLastPrice(lastTrade.getPrice());
+
+
 //        System.out.print("+++ new bunch total: " + (int) bunch.getSize());
 
 //        systime = System.currentTimeMillis();
@@ -121,7 +124,7 @@ public class Buncher {
 
 //        lasttime = System.currentTimeMillis();
 
-        Broadcaster.broadcast("u%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*");
+        Broadcaster.broadcast("u%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*^" + bunch.getFirstPrice() + "^=" + bunch.getLastPrice() + "=");
 
 
     }
@@ -130,23 +133,10 @@ public class Buncher {
 
         bunch.setId(lastTrade.getId());
 
-//        System.out.print("\n" + bunch.getExchangeName() + " bunch added. id: " + bunch.getId() + " time: " + bunch.getTimestamp() + " side: " + bunch.getSide() + " amt: " + (int) bunch.getSize() + "\n");
-
-//        systime = System.currentTimeMillis();
-//        System.out.println("systime: " + String.valueOf(systime));
-//
-//        addtime = System.currentTimeMillis();
-//        System.out.println("addtime: " + String.valueOf(addtime));
-
-//        lasttime = System.currentTimeMillis();
-//        System.out.println("lasttime: " + String.valueOf(lasttime));
+        bunch.setLastPrice(lastTrade.getPrice());
 
 
-//        startAddCheck();
-
-
-
-        Broadcaster.broadcast("%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*");
+        Broadcaster.broadcast("%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*^" + bunch.getFirstPrice() + "^=" + bunch.getLastPrice() + "=");
 
 
 

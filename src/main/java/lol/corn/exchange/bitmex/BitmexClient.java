@@ -34,7 +34,7 @@ public class BitmexClient extends Client {
     @Override
     public void onMessage(String message) {
 
-//        System.out.println(message);
+        System.out.println(message);
 
         if (message.contains("\"table\":\"trade\",\"action\":\"insert\"")) {
             onMessageTrade(message);

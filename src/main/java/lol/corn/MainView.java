@@ -96,6 +96,8 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         tradesGrid.addColumn(TradeUni::getInstrument).setHeader("Instrument").setResizable(true);
         tradesGrid.addColumn(TradeUni::getPrice).setHeader("Price").setResizable(true);
         tradesGrid.addColumn(TradeUni::getTimestamp).setHeader("Time").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("firstprice").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getLastPrice).setHeader("lastprice").setResizable(true);
     }
 
     private void addTrade(String message, boolean update) {
@@ -109,10 +111,16 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
         String timestamp = message.substring(message.indexOf("*") + 1, message.lastIndexOf("*"));
 
+        double firstPrice = Double.parseDouble(message.substring(message.indexOf("^") + 1, message.lastIndexOf("^")));
+        double lastPrice = Double.parseDouble(message.substring(message.indexOf("=") + 1, message.lastIndexOf("=")));
+
+
 
         TradeUni t = new TradeUni(exchangeName, instrument, size, side, price, timestamp, "id");
         t.setUpdate(update);
         t.setSizeFormatted(coolFormat(t.getSize(), 0));
+        t.setFirstPrice(firstPrice);
+        t.setLastPrice(lastPrice);
 
         sendTradeUni(t);
     }
