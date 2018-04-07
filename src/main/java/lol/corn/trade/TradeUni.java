@@ -43,13 +43,20 @@ public class TradeUni {
 
     }
 
-    public double getPriceGap() {
+    public String getPriceGap() {
 
         double gap = lastPrice-firstPrice;
 
-        DecimalFormat formatter = new DecimalFormat("#0.0");
+        String gapFormatted;
 
-        return Double.parseDouble(formatter.format(gap));
+        if (gap == 0) {
+            gapFormatted = "";
+        } else if (gap > 0) {
+            gapFormatted = String.format("^ $%d", gap);
+        } else {
+            gapFormatted = String.format("v $%d", gap);
+        }
+        return gapFormatted;
     }
 
 
