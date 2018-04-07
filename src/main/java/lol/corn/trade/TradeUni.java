@@ -53,15 +53,15 @@ public class TradeUni {
 
         if (gap == 0) {
             gapString = "";
-        } else if (gap >= 1) {
-            gapString = String.format("+%.0f", gap);
-        } else if (gap <= -1){
-            gapString = String.format("%.0f", gap);
+        } else if (gap >= 5) {
+            gapString = String.format("+%.1f", gap);
+        } else if (gap <= 5){
+            gapString = String.format("%.1f", gap);
         } else {
             gapString = "";
         }
 
-        return String.format("%.0f %s", price, gapString);
+        return !gapString.equals("") ? String.format("%.1f (%s)", firstPrice, gapString) : String.format("%.1f", firstPrice);
 
     }
 

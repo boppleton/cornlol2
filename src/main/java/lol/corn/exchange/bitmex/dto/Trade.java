@@ -30,7 +30,7 @@ public class Trade {
     @JsonProperty("size")
     private Integer size;
     @JsonProperty("price")
-    private Integer price;
+    private double price;
     @JsonProperty("tickDirection")
     private String tickDirection;
     @JsonProperty("trdMatchID")
@@ -90,12 +90,12 @@ public class Trade {
     }
 
     @JsonProperty("price")
-    public Integer getPrice() {
+    public double getPrice() {
         return price;
     }
 
     @JsonProperty("price")
-    public void setPrice(Integer price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
