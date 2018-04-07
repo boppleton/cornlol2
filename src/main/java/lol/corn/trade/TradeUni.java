@@ -52,6 +52,24 @@ public class TradeUni {
         return Double.parseDouble(formatter.format(gap));
     }
 
+    public String getPriceWithGap() {
+
+        double gap = lastPrice-firstPrice;
+
+        String gapString;
+
+        if (gap == 0) {
+            gapString = "";
+        } else if (gap > 0) {
+            gapString = String.format("+%.1f", gap);
+        } else {
+            gapString = String.format("%.1f", gap);
+        }
+
+        return String.format("%.0f %s", price, gapString);
+
+    }
+
 
     // exchangName
     public String getExchangeName() { return exchangeName; }
