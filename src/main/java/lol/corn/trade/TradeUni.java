@@ -60,10 +60,12 @@ public class TradeUni {
 
         if (gap == 0) {
             gapString = "";
-        } else if (gap > 0) {
+        } else if (gap > 2) {
             gapString = String.format("+%.1f", gap);
-        } else {
+        } else if (gap < -2){
             gapString = String.format("%.1f", gap);
+        } else {
+            gapString = "";
         }
 
         return String.format("%.0f %s", price, gapString);

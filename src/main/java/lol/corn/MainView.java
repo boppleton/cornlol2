@@ -1,12 +1,15 @@
 package lol.corn;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.*;
 import com.vaadin.flow.theme.Theme;
@@ -19,6 +22,7 @@ import lol.corn.trade.TradeUni;
 import lol.corn.utils.Broadcaster;
 import lol.corn.utils.WebsocketSetup;
 
+import java.awt.*;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -35,6 +39,9 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private static SplitLayout sideGridSplit = new SplitLayout();
     private static Grid<TradeUni> tradesGrid = new Grid<>();
     private static List<TradeUni> trades = new LinkedList<>();
+
+
+    private static TextField minAmountField = new TextField("minimum trade:");
 
     private static BinanceClient binanceClient;
     private static BitfinexClient bitfinexClient;
@@ -79,10 +86,15 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         addToPrimary(mainSplit);
         addToSecondary(new Button("bottom")); //put more for footer
 
+        HorizontalLayout underTickerSettings = new HorizontalLayout();
+        minAmountField.setWidth("20");
+        Button settingsButton = new Button("Exchange Settings");
+        underTickerSettings.add(minAmountField, settingsButton);
+
         sideGridSplit.setSizeFull();
         sideGridSplit.setOrientation(Orientation.VERTICAL);
         sideGridSplit.addToPrimary(tradesGrid);
-        sideGridSplit.addToSecondary(new Button("settings"));
+        sideGridSplit.addToSecondary(underTickerSettings);
         sideGridSplit.setSplitterPosition(90);
 
         mainSplit.setSizeFull();
