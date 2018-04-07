@@ -1,4 +1,4 @@
-package lol.corn;
+package lol.corn.utils;
 
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.VaadinServlet;

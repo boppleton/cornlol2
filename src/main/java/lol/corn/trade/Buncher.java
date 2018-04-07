@@ -4,6 +4,8 @@ import lol.corn.utils.Broadcaster;
 
 public class Buncher {
 
+    //todo: cleanup wow lol
+
     //trade stream variables
     private static TradeUni bunch = null;
     private static boolean addedThisOne = false;
@@ -17,7 +19,6 @@ public class Buncher {
 
     private static long lasttime;
 
-//todo: get first and last price to show price movement range with an arrow up or down
     public void addToBuncher(TradeUni trade) {
 
 //        System.out.println("added to buncher: " + trade.getExchangeName() + trade.getSize() + trade.getSide() + trade.getTimestamp());
@@ -82,8 +83,6 @@ public class Buncher {
 
         //put other if (exchange)'s here
 
-
-
         return true;
 
     }
@@ -116,13 +115,7 @@ public class Buncher {
 
 //        System.out.print("+++ new bunch total: " + (int) bunch.getSize());
 
-//        systime = System.currentTimeMillis();
 
-//        System.out.println("systime: " + String.valueOf(systime));
-
-//        System.out.println("lasttime: " + String.valueOf(lasttime));
-
-//        lasttime = System.currentTimeMillis();
 
         Broadcaster.broadcast("u%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*^" + bunch.getFirstPrice() + "^=" + bunch.getLastPrice() + "=");
 
@@ -139,20 +132,9 @@ public class Buncher {
         Broadcaster.broadcast("%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*^" + bunch.getFirstPrice() + "^=" + bunch.getLastPrice() + "=");
 
 
-
-
     }
 
-    private void startAddCheck() {
-    }
 
-    private void checkTime() throws InterruptedException {
-
-        Thread.sleep(20);
-
-
-
-    }
 
 
 }
