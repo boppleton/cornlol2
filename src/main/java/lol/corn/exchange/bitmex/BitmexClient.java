@@ -4,6 +4,8 @@ import com.vaadin.flow.component.page.Push;
 import lol.corn.exchange.Client;
 import lol.corn.exchange.bitmex.dto.Trade;
 import lol.corn.exchange.bitmex.dto.Trades;
+import lol.corn.trade.Buncher;
+import lol.corn.trade.TradeUni;
 import lol.corn.utils.Broadcaster;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -15,6 +17,9 @@ import java.util.List;
 public class BitmexClient extends Client {
 
     public static int minimumTrade;
+
+    private static Buncher buncher = new Buncher();
+
 
 
 
@@ -52,16 +57,32 @@ public class BitmexClient extends Client {
 
             List<Trade> tradeData = trades.getData();
 
-            //calc total of trade bunch
+//            calc total of trade bunch
             int total = 0;
-            for (int i = 0; i < tradeData.size(); i++) { total += tradeData.get(i).getSize(); }
+//            for (int i = 0; i < tradeData.size(); i++) { total += tradeData.get(i).getSize(); }
+
+            for (Trade trade : tradeData) {
+
+                TradeUni t = new TradeUni();
+                t.setExchangeName("bitmex");
+                t.setInstrument("Perp XBTUSD");
+                t.setSize(trade.getSize());
+                t.setSide(trade.getSide());
+                t.setPrice(trade.getPrice());
+                t.setTimestamp(String.valueOf(trade.getTimestamp()));
+
+                buncher.addToBuncher(t);
+
+            }
+
+
 
             //sendd ittt
-            if (total >= 5000) {
+//            if (total >= 5000) {
 
-                System.out.println("broaccasting + " + total);
-                Broadcaster.broadcast("(bitmex XBTUSD)!" + tradeData.get(0).getSide() + "!$" + total + "$@" + tradeData.get(0).getPrice() + "@");
-            }
+//                System.out.println("broaccasting + " + total);
+//                Broadcaster.broadcast("(bitmex XBTUSD)!" + tradeData.get(0).getSide() + "!$" + total + "$@" + tradeData.get(0).getPrice() + "@");
+//            }
 
         } catch (Exception ee) {
             System.out.println(ee.getLocalizedMessage());

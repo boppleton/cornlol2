@@ -49,7 +49,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         bitfinexClient.connectBlocking();
         bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-//        startWebsocket();
+        startWebsocket();
 
         setClassName("main-layout");
     }
@@ -76,19 +76,26 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private void setupTradesGrid() {
 
         tradesGrid.setItems(trades);
-        tradesGrid.addColumn(TradeUni::getSize).setHeader("Amount").setResizable(true).setWidth("27%");
-        tradesGrid.addColumn(TradeUni::getInstrument).setHeader("Instrument").setResizable(true).setWidth("54%");
+        tradesGrid.addColumn(TradeUni::getSize).setHeader("Amount").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getExchangeName).setHeader("Exchange").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getInstrument).setHeader("Instrument").setResizable(true);
         tradesGrid.addColumn(TradeUni::getPrice).setHeader("Price").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getTimestamp).setHeader("Time").setResizable(true);
     }
 
     private void addTrade(String message, boolean update) {
 
-        double size = Double.parseDouble(message.substring(message.indexOf("$") + 1, message.lastIndexOf("$")));
-        String exchangeName = message.substring(message.indexOf("(") + 1, message.lastIndexOf(")"));
-        String side = message.substring(message.indexOf("!") + 1, message.lastIndexOf("!"));
-        double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
 
-        TradeUni t = new TradeUni(exchangeName, "instrument", size, side, price, "timestamp", "id");
+
+        String exchangeName = message.substring(message.indexOf("(") + 1, message.lastIndexOf(")"));
+        String instrument = message.substring(message.indexOf("<") + 1, message.lastIndexOf(">"));
+        String side = message.substring(message.indexOf("!") + 1, message.lastIndexOf("!"));
+        double size = Double.parseDouble(message.substring(message.indexOf("$") + 1, message.lastIndexOf("$")));
+        double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
+        String timestamp = message.substring(message.indexOf("*") + 1, message.lastIndexOf("*"));
+
+
+        TradeUni t = new TradeUni(exchangeName, instrument, size, side, price, timestamp, "id");
         t.setUpdate(update);
 
         sendTradeUni(t);
