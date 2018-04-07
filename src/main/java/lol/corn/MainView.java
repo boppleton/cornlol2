@@ -47,21 +47,24 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-        bitfinexClient = new BitfinexClient();
-        bitfinexClient.connectBlocking();
-        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+//        bitfinexClient = new BitfinexClient();
+//        bitfinexClient.connectBlocking();
+//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-        okexClient = new OkexClient();
-        okexClient.connectBlocking();
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+//        okexClient = new OkexClient();
+//        okexClient.connectBlocking();
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
-        WebsocketSetup.bitmexConnect();
-        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+//        WebsocketSetup.bitmexConnect();
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+
+        binanceClient = new BinanceClient("btcusdt@aggTrade");
+        binanceClient.connectBlocking();
 
 
 
@@ -94,10 +97,11 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         tradesGrid.addColumn(TradeUni::getSizeFormatted).setHeader("Amount").setResizable(true);
         tradesGrid.addColumn(TradeUni::getExchangeName).setHeader("Exchange").setResizable(true);
         tradesGrid.addColumn(TradeUni::getInstrument).setHeader("Instrument").setResizable(true);
-        tradesGrid.addColumn(TradeUni::getPrice).setHeader("Price").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("Trade Price").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getLastPrice).setHeader("Last Price").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getPriceGap).setHeader("Slippage").setResizable(true);
         tradesGrid.addColumn(TradeUni::getTimestamp).setHeader("Time").setResizable(true);
-        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("firstprice").setResizable(true);
-        tradesGrid.addColumn(TradeUni::getLastPrice).setHeader("lastprice").setResizable(true);
+
     }
 
     private void addTrade(String message, boolean update) {

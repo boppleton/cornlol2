@@ -1,6 +1,7 @@
 package lol.corn.trade;
 
 
+import java.text.DecimalFormat;
 
 public class TradeUni {
 
@@ -40,6 +41,15 @@ public class TradeUni {
         this.timestamp = timestamp;
         this.id = id;
 
+    }
+
+    public double getPriceGap() {
+
+        double gap = lastPrice-firstPrice;
+
+        DecimalFormat formatter = new DecimalFormat("#0.0");
+
+        return Double.parseDouble(formatter.format(gap));
     }
 
 
@@ -103,5 +113,7 @@ public class TradeUni {
 
     public double getLastPrice() { return lastPrice; }
     public void setLastPrice(double lastPrice) { this.lastPrice = lastPrice; }
+
+
 
 }

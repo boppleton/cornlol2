@@ -53,7 +53,9 @@ public class BinanceClient extends Client {
 //            double total = Double.parseDouble(aggTrade.getQuantity());
 
 
-            TradeUni t = new TradeUni("binance", "BTCUSDT", (Double.parseDouble(aggTrade.getQuantity())*Double.parseDouble(aggTrade.getPrice())), aggTrade.getSide(), Double.parseDouble(aggTrade.getPrice()), aggTrade.getEventTime().toString(), aggTrade.getAggId().toString());
+            TradeUni t = new TradeUni("binance", aggTrade.getSymbol(), (Double.parseDouble(aggTrade.getQuantity())*Double.parseDouble(aggTrade.getPrice())), aggTrade.getSide(), Double.parseDouble(aggTrade.getPrice()), aggTrade.getEventTime().toString(), "id");
+
+
             buncher.addToBuncher(t);
 
         } catch (Exception ee) {
