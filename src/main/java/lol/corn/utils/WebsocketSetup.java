@@ -10,9 +10,13 @@ public class WebsocketSetup {
     public WebsocketSetup() {
     }
 
-    public static void startStream() throws URISyntaxException, InterruptedException {
+    public static void bitmexConnect() throws URISyntaxException, InterruptedException {
         bitmexclient = new BitmexClient();
         bitmexclient.connectBlocking();
-        bitmexclient.subscribe(true, "trade", "XBTUSD");
     }
+
+    public static void bitmexSubscribe(String topic, String pair, boolean connect) {
+        bitmexclient.subscribe(connect, topic, pair);
+    }
+
 }

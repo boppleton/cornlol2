@@ -34,6 +34,8 @@ public class BitmexClient extends Client {
     @Override
     public void onMessage(String message) {
 
+//        System.out.println(message);
+
         if (message.contains("\"table\":\"trade\",\"action\":\"insert\"")) {
             onMessageTrade(message);
         } else if (message.contains("orderBookL2")) {
@@ -65,7 +67,7 @@ public class BitmexClient extends Client {
 
                 TradeUni t = new TradeUni();
                 t.setExchangeName("bitmex");
-                t.setInstrument("Perp XBTUSD");
+                t.setInstrument(trade.getSymbol());
                 t.setSize(trade.getSize());
                 t.setSide(trade.getSide());
                 t.setPrice(trade.getPrice());

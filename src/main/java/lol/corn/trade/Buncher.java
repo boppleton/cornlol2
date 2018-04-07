@@ -4,13 +4,12 @@ import lol.corn.utils.Broadcaster;
 
 public class Buncher {
 
-
     //trade stream variables
     private static TradeUni bunch = null;
     private static boolean addedThisOne = false;
     private static boolean inBunchTime = false;
 
-    private static int minimumTrade = 200000;
+    private static int minimumTrade = 2000;
 
     private static long systime;
 

@@ -45,11 +45,17 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-        bitfinexClient = new BitfinexClient();
-        bitfinexClient.connectBlocking();
-        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+//        bitfinexClient = new BitfinexClient();
+//        bitfinexClient.connectBlocking();
+//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-        startWebsocket();
+        WebsocketSetup.bitmexConnect();
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
+        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
+        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+
+
+
 
         setClassName("main-layout");
     }
@@ -131,14 +137,15 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         }
     }
 
-    private void startWebsocket() {
-
-        try {
-            WebsocketSetup.startStream();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void startWebsocket() {
+//
+//        try {
+//            WebsocketSetup.bitmexStreamTrade("XBTUSD");
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void receiveBroadcast(String message) {
