@@ -40,9 +40,6 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private static Grid<TradeUni> tradesGrid = new Grid<>();
     private static List<TradeUni> trades = new LinkedList<>();
 
-
-    private static TextField minAmountField = new TextField("minimum trade:");
-
     private static BinanceClient binanceClient;
     private static BitfinexClient bitfinexClient;
     private static OkexClient okexClient;
@@ -87,7 +84,8 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         addToSecondary(new Button("bottom")); //put more for footer
 
         HorizontalLayout underTickerSettings = new HorizontalLayout();
-        minAmountField.setWidth("20");
+        TextField minAmountField = new TextField("minimum trade:");
+        minAmountField.setAutofocus(true);
         Button settingsButton = new Button("Exchange Settings");
         underTickerSettings.add(minAmountField, settingsButton);
 
@@ -113,6 +111,9 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         tradesGrid.addColumn(TradeUni::getPriceWithGap).setHeader("Price").setResizable(true).setWidth("24%");
 //        tradesGrid.addColumn(TradeUni::getPriceGap).setHeader("Slippage").setResizable(true);
 //        tradesGrid.addColumn(TradeUni::getTimestamp).setHeader("Time").setResizable(true);
+
+
+        tradesGrid.setColumnReorderingAllowed(true);
 
     }
 
