@@ -102,7 +102,6 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     }
 
     private void setupTradesGrid() {
-
         tradesGrid.setItems(trades);
         tradesGrid.addColumn(TradeUni::getSizeFormatted).setHeader("Amount").setResizable(true).setWidth("20%");
         tradesGrid.addColumn(TradeUni::getExchangeName).setHeader("Exchange").setResizable(true).setWidth("23%");
