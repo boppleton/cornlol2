@@ -80,13 +80,13 @@ public class OkexClient extends Client {//todo: remove first pushes by checking 
                         instrument = "spot BTCUSDT";
                         break;
                     case "ok_sub_futureusd_btc_trade_this_week":
-                        instrument = "Futures (this week) BTCUSDT";
+                        instrument = "Futures (this week)";
                         break;
                     case "ok_sub_futureusd_btc_trade_next_week":
-                        instrument = "Futures (next week) BTCUSDT";
+                        instrument = "Futures (next week)";
                         break;
                     case "ok_sub_futureusd_btc_trade_quarter":
-                        instrument = "Futures (quarterly) BTCUSDT";
+                        instrument = "Futures (quarterly)";
                         break;
                     default:
                         instrument = "invalid instrument";

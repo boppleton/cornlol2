@@ -83,7 +83,7 @@ public class BitfinexClient extends Client {
 
             TradeUni t = new TradeUni();
             t.setExchangeName("bitfinex");
-            t.setInstrument("BTCUSD");
+            t.setInstrument("Spot");
             t.setSize(Math.abs(te.amount) * te.price);
             t.setSide(te.amount > 0 ? "buy" : "sell");
             t.setPrice(te.price);

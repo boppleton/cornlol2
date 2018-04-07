@@ -69,7 +69,7 @@ public class BitmexClient extends Client {
 
                 switch (trade.getSymbol()) {
                     case "XBTUSD":
-                        instrument = "Perp Swap Futures";
+                        instrument = "Perp Swap Contracts";
                         break;
                     case "XBTM18":
                         instrument = "June Futures";
