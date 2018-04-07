@@ -43,21 +43,7 @@ public class TradeUni {
 
     }
 
-    public String getPriceGap() {
 
-        double gap = lastPrice-firstPrice;
-
-        String gapFormatted;
-
-        if (gap == 0) {
-            gapFormatted = "";
-        } else if (gap > 0) {
-            gapFormatted = String.format("^ $%d", gap);
-        } else {
-            gapFormatted = String.format("v $%d", gap);
-        }
-        return gapFormatted;
-    }
 
     public String getPriceWithGap() {
 
@@ -67,10 +53,10 @@ public class TradeUni {
 
         if (gap == 0) {
             gapString = "";
-        } else if (gap > 2) {
-            gapString = String.format("+%.1f", gap);
-        } else if (gap < -2){
-            gapString = String.format("%.1f", gap);
+        } else if (gap >= 1) {
+            gapString = String.format("+%.0f", gap);
+        } else if (gap <= -1){
+            gapString = String.format("%.0f", gap);
         } else {
             gapString = "";
         }

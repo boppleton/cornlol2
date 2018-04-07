@@ -1,5 +1,6 @@
 package lol.corn.trade;
 
+import lol.corn.MainView;
 import lol.corn.utils.Broadcaster;
 
 public class Buncher {
@@ -11,7 +12,7 @@ public class Buncher {
     private static boolean addedThisOne = false;
     private static boolean inBunchTime = false;
 
-    private static int minimumTrade = 9000;
+//    private static int minimumTrade = 9000;
 
     private static long systime;
 
@@ -42,7 +43,7 @@ public class Buncher {
 
 
             //if over min trade
-            if (bunch.getSize() >= minimumTrade) {
+            if (bunch.getSize() >= MainView.getMinAmount()) {
 
 //                System.out.println("bunch over min trade");
 
@@ -98,7 +99,7 @@ public class Buncher {
         bunch.setFirstPrice(trade.getPrice());
 
         //if bunch over min, send it and clear
-        if (bunch.getSize() >= minimumTrade) {
+        if (bunch.getSize() >= MainView.getMinAmount()) {
 //            System.out.println("sending new bunch");
             add(bunch, trade);
 //            bunch = null;

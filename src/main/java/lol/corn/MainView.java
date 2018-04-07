@@ -5,6 +5,9 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Push;
@@ -44,6 +47,13 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private static BinanceClient binanceClient;
     private static BitfinexClient bitfinexClient;
     private static OkexClient okexClient;
+    
+    private static TextField minAmountField;
+
+
+
+    private static int minAmount = 25000;
+
 
     public MainView() throws URISyntaxException, InterruptedException {
         setupLayout();
@@ -52,30 +62,31 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-        bitfinexClient = new BitfinexClient();
-        bitfinexClient.connectBlocking();
-        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+//        bitfinexClient = new BitfinexClient();
+//        bitfinexClient.connectBlocking();
+//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-        okexClient = new OkexClient();
-        okexClient.connectBlocking();
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+//        okexClient = new OkexClient();
+//        okexClient.connectBlocking();
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
         WebsocketSetup.bitmexConnect();
         WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
 
-        binanceClient = new BinanceClient("btcusdt@aggTrade");
-        binanceClient.connectBlocking();
+//        binanceClient = new BinanceClient("btcusdt@aggTrade");
+//        binanceClient.connectBlocking();
 
 
 
 
         setClassName("main-layout");
     }
+
 
     private void setupLayout() {
 
@@ -85,10 +96,25 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         addToSecondary(new Button("bottom")); //put more for footer
 
         HorizontalLayout underTickerSettings = new HorizontalLayout();
-        TextField minAmountField = new TextField("minimum trade:");
+
+
+        minAmountField = new TextField("minimum trade:");
+        minAmountField.setPreventInvalidInput(true);
+        minAmountField.setErrorMessage("errorlol");
+        minAmountField.setPlaceholder("> 1000 plz");
+        minAmountField.addValueChangeListener(e -> updateMinTrade());
         minAmountField.setAutofocus(true);
-        Button settingsButton = new Button("Exchange Settings");
-        underTickerSettings.add(minAmountField, settingsButton);
+        minAmountField.setWidth("100px");
+        minAmountField.setValue(String.valueOf(minAmount));
+
+
+
+        Button exchangesButton = new Button("Exchanges");
+        Button settingsButton = new Button("Settings");
+        settingsButton.setSizeUndefined();
+        underTickerSettings.add(minAmountField, exchangesButton, settingsButton);
+        underTickerSettings.setVerticalComponentAlignment(FlexComponent.Alignment.END, exchangesButton);
+        underTickerSettings.setVerticalComponentAlignment(FlexComponent.Alignment.END, settingsButton);
 
         sideGridSplit.setSizeFull();
         sideGridSplit.setOrientation(Orientation.VERTICAL);
@@ -102,9 +128,34 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         mainSplit.setSplitterPosition(20);
     }
 
+    private void updateMinTrade() {
+
+        if (!minAmountField.getValue().isEmpty()) {
+            double filtertxt = Double.parseDouble(minAmountField.getValue());
+            if (filtertxt > 1000) {
+                minAmount = Integer.parseInt(minAmountField.getValue());
+            } else {
+                minAmountField.setValue("1000");
+                setMinAmount(1000);
+            }
+        } else {
+            System.out.println("filtertext null?");
+        }
+    }
+
+
+    public void setMinAmount(int minAmount) {
+        MainView.minAmount = minAmount;
+    }
+    public static int getMinAmount() {
+        return minAmount;
+    }
+
     private void setupTradesGrid() {
         tradesGrid.setItems(trades);
         tradesGrid.addColumn(TradeUni::getSizeFormatted).setHeader("Amount").setResizable(true).setWidth("20%");
+        tradesGrid.addColumn(TradeUni::getSide).setHeader("Side").setResizable(true).setWidth("10%");
+
         tradesGrid.addColumn(TradeUni::getExchangeName).setHeader("Exchange").setResizable(true).setWidth("23%");
         tradesGrid.addColumn(TradeUni::getInstrument).setHeader("Instrument").setResizable(true).setWidth("33%");
 //        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("Trade Price").setResizable(true);
@@ -119,23 +170,28 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
     private void addTrade(String message, boolean update) {
 
-        String exchangeName = message.substring(message.indexOf("%") + 1, message.lastIndexOf("%"));
-        String instrument = message.substring(message.indexOf("<") + 1, message.lastIndexOf(">"));
-        String side = message.substring(message.indexOf("!") + 1, message.lastIndexOf("!"));
         double size = Double.parseDouble(message.substring(message.indexOf("$") + 1, message.lastIndexOf("$")));
-        double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
-        String timestamp = message.substring(message.indexOf("*") + 1, message.lastIndexOf("*"));
 
-        double firstPrice = Double.parseDouble(message.substring(message.indexOf("^") + 1, message.lastIndexOf("^")));
-        double lastPrice = Double.parseDouble(message.substring(message.indexOf("=") + 1, message.lastIndexOf("=")));
+//        if (size >= minAmount) {
 
-        TradeUni t = new TradeUni(exchangeName, instrument, size, side, price, timestamp, "id");
-        t.setUpdate(update);
-        t.setSizeFormatted(AmountFormat.coolFormat(t.getSize(), 0));
-        t.setFirstPrice(firstPrice);
-        t.setLastPrice(lastPrice);
+            String exchangeName = message.substring(message.indexOf("%") + 1, message.lastIndexOf("%"));
+            String instrument = message.substring(message.indexOf("<") + 1, message.lastIndexOf(">"));
+            String side = message.substring(message.indexOf("!") + 1, message.lastIndexOf("!"));
+            double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
+            String timestamp = message.substring(message.indexOf("*") + 1, message.lastIndexOf("*"));
 
-        sendTradeUni(t);
+            double firstPrice = Double.parseDouble(message.substring(message.indexOf("^") + 1, message.lastIndexOf("^")));
+            double lastPrice = Double.parseDouble(message.substring(message.indexOf("=") + 1, message.lastIndexOf("=")));
+
+            TradeUni t = new TradeUni(exchangeName, instrument, size, side, price, timestamp, "id");
+            t.setUpdate(update);
+            t.setSizeFormatted(AmountFormat.coolFormat(t.getSize(), 0));
+            t.setFirstPrice(firstPrice);
+            t.setLastPrice(lastPrice);
+
+            sendTradeUni(t);
+
+//        }
     }
 
     private void sendTradeUni(TradeUni t) {
