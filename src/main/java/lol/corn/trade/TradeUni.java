@@ -51,12 +51,14 @@ public class TradeUni {
 
         String gapString;
 
+        System.out.println(gap);
+
         if (gap == 0) {
             gapString = "";
-        } else if (gap >= 5) {
-            gapString = String.format("+%.1f", gap);
-        } else if (gap <= 5){
-            gapString = String.format("%.1f", gap);
+        } else if (gap >= 1) {
+            gapString = String.format("+ %.1f", gap);
+        } else if (gap <= 1){
+            gapString = String.format("- %.1f", Math.abs(gap));
         } else {
             gapString = "";
         }
