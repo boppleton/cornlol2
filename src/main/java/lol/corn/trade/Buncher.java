@@ -9,7 +9,7 @@ public class Buncher {
     private static boolean addedThisOne = false;
     private static boolean inBunchTime = false;
 
-    private static int minimumTrade = 100000;
+    private static int minimumTrade = 5000;
 
     private static long systime;
 
@@ -20,11 +20,11 @@ public class Buncher {
 //todo: get first and last price to show price movement range with an arrow up or down
     public void addToBuncher(TradeUni trade) {
 
-        System.out.println("added to buncher: " + trade.getExchangeName() + trade.getSize() + trade.getSide() + trade.getTimestamp());
+//        System.out.println("added to buncher: " + trade.getExchangeName() + trade.getSize() + trade.getSide() + trade.getTimestamp());
 
         //if no bunch start new one
         if (bunch == null) {
-            System.out.println("bunch null, new bunch with this trade");
+//            System.out.println("bunch null, new bunch with this trade");
             newBunch(trade);
 
         }
@@ -37,21 +37,21 @@ public class Buncher {
             //add this trade to current bunch
             bunch.setSize(bunch.getSize() + trade.getSize());
 
-            System.out.println("+ we have a bunch, and this trade has same time/side to add to bunch. current size: " + bunch.getSize());
+//            System.out.println("+ we have a bunch, and this trade has same time/side to add to bunch. current size: " + bunch.getSize());
 
 
             //if over min trade
             if (bunch.getSize() >= minimumTrade) {
 
-                System.out.println("bunch over min trade");
+//                System.out.println("bunch over min trade");
 
                 //check if existing panel for this timestamp, decides to add or update
                 if (!addedThisOne) {
-                    System.out.println("havent added this one, add it");
+//                    System.out.println("havent added this one, add it");
                     add(bunch, trade);
                     addedThisOne = true;
                 } else {
-                    System.out.println("already a pan up, just update it");
+//                    System.out.println("already a pan up, just update it");
                     update(bunch, trade);
                 }
             }
@@ -60,7 +60,7 @@ public class Buncher {
         //if there is a bunch but old timestamp or new type, new bunch with this trade
         else {
 
-            System.out.println("there is a bunch but we have a new time or type, new bunch with this trade.  size:" + trade.getSize());
+//            System.out.println("there is a bunch but we have a new time or type, new bunch with this trade.  size:" + trade.getSize());
             newBunch(trade);
         }
 
@@ -96,6 +96,8 @@ public class Buncher {
         //maybe just be able to set tradeuni from the trade without each .get?
         bunch = new TradeUni(trade.getExchangeName(), trade.getInstrument(), trade.getSize(), trade.getSide(), trade.getPrice(), trade.getTimestamp(), trade.getId());
 
+        bunch.
+
         //if bunch over min, send it and clear
         if (bunch.getSize() >= minimumTrade) {
 //            System.out.println("sending new bunch");
@@ -109,15 +111,15 @@ public class Buncher {
 
         bunch.setId(lastTrade.getId());
 
-        System.out.print("+++ new bunch total: " + (int) bunch.getSize());
+//        System.out.print("+++ new bunch total: " + (int) bunch.getSize());
 
-        systime = System.currentTimeMillis();
+//        systime = System.currentTimeMillis();
 
-        System.out.println("systime: " + String.valueOf(systime));
+//        System.out.println("systime: " + String.valueOf(systime));
 
-        System.out.println("lasttime: " + String.valueOf(lasttime));
+//        System.out.println("lasttime: " + String.valueOf(lasttime));
 
-        lasttime = System.currentTimeMillis();
+//        lasttime = System.currentTimeMillis();
 
         Broadcaster.broadcast("u%" + bunch.getExchangeName() + "%<" + bunch.getInstrument() + ">!" + bunch.getSide() + "!$" + bunch.getSize() + "$@" + bunch.getPrice() + "@*" + bunch.getTimestamp() + "*");
 
@@ -128,7 +130,7 @@ public class Buncher {
 
         bunch.setId(lastTrade.getId());
 
-        System.out.print("\n" + bunch.getExchangeName() + " bunch added. id: " + bunch.getId() + " time: " + bunch.getTimestamp() + " side: " + bunch.getSide() + " amt: " + (int) bunch.getSize() + "\n");
+//        System.out.print("\n" + bunch.getExchangeName() + " bunch added. id: " + bunch.getId() + " time: " + bunch.getTimestamp() + " side: " + bunch.getSide() + " amt: " + (int) bunch.getSize() + "\n");
 
 //        systime = System.currentTimeMillis();
 //        System.out.println("systime: " + String.valueOf(systime));

@@ -17,6 +17,15 @@ public class TradeUni {
     private String id;
     private boolean update = false;
 
+
+
+    private double firstPrice;
+    private double lastPrice;
+
+
+
+    private String sizeFormatted;
+
     public TradeUni() {
 
     }
@@ -85,5 +94,14 @@ public class TradeUni {
     // update
     public boolean isUpdate() { return update; }
     public void setUpdate(boolean update) { this.update = update; }
+
+    public String getSizeFormatted() { return sizeFormatted; }
+    public void setSizeFormatted(String sizeFormatted) { this.sizeFormatted = sizeFormatted; }
+
+    public double getFirstPrice() { return firstPrice; }
+    public void setFirstPrice(double firstPrice) { this.firstPrice = firstPrice; }
+
+    public double getLastPrice() { return lastPrice; }
+    public void setLastPrice(double lastPrice) { this.lastPrice = lastPrice; }
 
 }

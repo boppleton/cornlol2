@@ -91,7 +91,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private void setupTradesGrid() {
 
         tradesGrid.setItems(trades);
-        tradesGrid.addColumn(TradeUni::getSize).setHeader("Amount").setResizable(true);
+        tradesGrid.addColumn(TradeUni::getSizeFormatted).setHeader("Amount").setResizable(true);
         tradesGrid.addColumn(TradeUni::getExchangeName).setHeader("Exchange").setResizable(true);
         tradesGrid.addColumn(TradeUni::getInstrument).setHeader("Instrument").setResizable(true);
         tradesGrid.addColumn(TradeUni::getPrice).setHeader("Price").setResizable(true);
@@ -112,6 +112,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         TradeUni t = new TradeUni(exchangeName, instrument, size, side, price, timestamp, "id");
         t.setUpdate(update);
+        t.setSizeFormatted(coolFormat(t.getSize(), 0));
 
         sendTradeUni(t);
     }
@@ -155,6 +156,19 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 //            e.printStackTrace();
 //        }
 //    }
+
+    private static String coolFormat(double n, int iteration) {
+
+        String[] c = new String[]{"k", "mil"};
+
+        double d = ((long) n / 100) / 10.0;
+        boolean isRound = (d * 10) % 10 == 0;//true if the decimal part is equal to 0 (then it's trimmed anyway)
+        return (d < 1000 ? //this determines the class, i.e. 'k', 'm' etc
+                ((d > 99.9 || isRound || (!isRound && d > 9.99) ? //this decides whether to trim the decimals
+                        (int) d * 10 / 10 : d + "" // (int) d * 10 / 10 drops the decimal
+                ) + "" + c[iteration])
+                : coolFormat(d, iteration + 1));
+    }
 
     @Override
     public void receiveBroadcast(String message) {
