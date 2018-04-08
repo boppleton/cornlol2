@@ -47,9 +47,8 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private static BinanceClient binanceClient;
     private static BitfinexClient bitfinexClient;
     private static OkexClient okexClient;
-    
-    private static TextField minAmountField;
 
+    private static TextField minAmountField;
 
 
     private static int minAmount = 25000;
@@ -62,26 +61,24 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-        bitfinexClient = new BitfinexClient();
-        bitfinexClient.connectBlocking();
-        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+//        bitfinexClient = new BitfinexClient();
+//        bitfinexClient.connectBlocking();
+//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-        okexClient = new OkexClient();
-        okexClient.connectBlocking();
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+//        okexClient = new OkexClient();
+//        okexClient.connectBlocking();
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
         WebsocketSetup.bitmexConnect();
         WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
 
-        binanceClient = new BinanceClient("btcusdt@aggTrade");
-        binanceClient.connectBlocking();
-
-
+//        binanceClient = new BinanceClient("btcusdt@aggTrade");
+//        binanceClient.connectBlocking();
 
 
         setClassName("main-layout");
@@ -106,7 +103,6 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         minAmountField.setAutofocus(true);
         minAmountField.setWidth("100px");
         minAmountField.setValue(String.valueOf(minAmount));
-
 
 
         Button exchangesButton = new Button("Exchanges");
@@ -147,6 +143,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     public void setMinAmount(int minAmount) {
         MainView.minAmount = minAmount;
     }
+
     public static int getMinAmount() {
         return minAmount;
     }
@@ -174,28 +171,27 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
     private void addTrade(String message, boolean update) {
 
-        double size = Double.parseDouble(message.substring(message.indexOf("$") + 1, message.lastIndexOf("$")));
 
-//        if (size >= minAmount) {
+        double size = Double.parseDouble(message.substring(message.indexOf("#") + 1, message.lastIndexOf("#")));
+        String exchangeName = message.substring(message.indexOf("%") + 1, message.lastIndexOf("%"));
+        String instrument = message.substring(message.indexOf("<") + 1, message.lastIndexOf(">"));
+        String side = message.substring(message.indexOf("!") + 1, message.lastIndexOf("!"));
+        double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
+        String timestamp = message.substring(message.indexOf("*") + 1, message.lastIndexOf("*"));
 
-            String exchangeName = message.substring(message.indexOf("%") + 1, message.lastIndexOf("%"));
-            String instrument = message.substring(message.indexOf("<") + 1, message.lastIndexOf(">"));
-            String side = message.substring(message.indexOf("!") + 1, message.lastIndexOf("!"));
-            double price = Double.parseDouble(message.substring(message.indexOf("@") + 1, message.lastIndexOf("@")));
-            String timestamp = message.substring(message.indexOf("*") + 1, message.lastIndexOf("*"));
+        double firstPrice = Double.parseDouble(message.substring(message.indexOf("~") + 1, message.lastIndexOf("~")));
+        System.out.println(firstPrice);
+        double lastPrice = Double.parseDouble(message.substring(message.indexOf("=") + 1, message.lastIndexOf("=")));
+        System.out.println(lastPrice);
 
-            double firstPrice = Double.parseDouble(message.substring(message.indexOf("^") + 1, message.lastIndexOf("^")));
-            double lastPrice = Double.parseDouble(message.substring(message.indexOf("=") + 1, message.lastIndexOf("=")));
+        TradeUni t = new TradeUni(exchangeName, instrument, size, side, price, timestamp, "id");
+        t.setUpdate(update);
+        t.setSizeFormatted(AmountFormat.coolFormat(t.getSize(), 0));
+        t.setFirstPrice(firstPrice);
+        t.setLastPrice(lastPrice);
 
-            TradeUni t = new TradeUni(exchangeName, instrument, size, side, price, timestamp, "id");
-            t.setUpdate(update);
-            t.setSizeFormatted(AmountFormat.coolFormat(t.getSize(), 0));
-            t.setFirstPrice(firstPrice);
-            t.setLastPrice(lastPrice);
+        sendTradeUni(t);
 
-            sendTradeUni(t);
-
-//        }
     }
 
     private void sendTradeUni(TradeUni t) {
@@ -225,7 +221,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
     @Override
     public void receiveBroadcast(String message) {
-        addTrade(message, message.substring(0,1).equals("u"));
+        addTrade(message, message.substring(0, 1).equals("u"));
     }
 
     private void registerBroadcastListener() {

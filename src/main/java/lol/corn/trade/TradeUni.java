@@ -49,6 +49,8 @@ public class TradeUni {
 
         double gap = lastPrice-firstPrice;
 
+        System.out.println(lastPrice + " - " + firstPrice + "gap: " + gap);
+
         String gapString;
 
         System.out.println(gap);
