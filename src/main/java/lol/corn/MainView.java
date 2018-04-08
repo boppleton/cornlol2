@@ -168,6 +168,8 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         tradesGrid.setColumnReorderingAllowed(true);
 
+        tradesGrid.setClassName("gridclass");
+
     }
 
     private void addTrade(String message, boolean update) {
