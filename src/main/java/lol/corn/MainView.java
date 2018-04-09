@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.*;
 import com.vaadin.flow.theme.Theme;
@@ -61,24 +63,24 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-//        bitfinexClient = new BitfinexClient();
-//        bitfinexClient.connectBlocking();
-//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+        bitfinexClient = new BitfinexClient();
+        bitfinexClient.connectBlocking();
+        bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-//        okexClient = new OkexClient();
-//        okexClient.connectBlocking();
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+        okexClient = new OkexClient();
+        okexClient.connectBlocking();
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
         WebsocketSetup.bitmexConnect();
         WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
-//        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
-//        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
+        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
 
-//        binanceClient = new BinanceClient("btcusdt@aggTrade");
-//        binanceClient.connectBlocking();
+        binanceClient = new BinanceClient("btcusdt@aggTrade");
+        binanceClient.connectBlocking();
 
 
         setClassName("main-layout");
@@ -98,14 +100,20 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         minAmountField = new TextField("minimum trade:");
         minAmountField.setPreventInvalidInput(true);
         minAmountField.setErrorMessage("errorlol");
-        minAmountField.setPlaceholder("> 1000 plz");
+        minAmountField.setPlaceholder("> 1000");
         minAmountField.addValueChangeListener(e -> updateMinTrade());
         minAmountField.setAutofocus(true);
         minAmountField.setWidth("100px");
         minAmountField.setValue(String.valueOf(minAmount));
+        minAmountField.setId("min-amount");
+        minAmountField.setPattern("[0-9]*");
+        minAmountField.setPreventInvalidInput(true);
+        minAmountField.setPrefixComponent(new Span("$"));
+
 
 
         Button exchangesButton = new Button("Exchanges");
+        exchangesButton.getElement().setAttribute("theme", "bordered");
         Button settingsButton = new Button("Settings");
         settingsButton.setSizeUndefined();
         underTickerSettings.add(minAmountField, exchangesButton, settingsButton);
@@ -150,17 +158,21 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
     private void setupTradesGrid() {
         tradesGrid.setItems(trades);
-        tradesGrid.addColumn(TradeUni::getSizeFormatted).setHeader("Amount").setResizable(true).setWidth("20%");
-        tradesGrid.addColumn(TradeUni::getSide).setHeader("Side").setResizable(true).setWidth("10%");
 
-        tradesGrid.addColumn(TradeUni::getExchangeName).setHeader("Exchange").setResizable(true).setWidth("23%");
-        tradesGrid.addColumn(TradeUni::getInstrument).setHeader("Instrument").setResizable(true).setWidth("33%");
+//        tradesGrid.addColumn(TradeUni::getSide).setResizable(true).setWidth("35px");
+        tradesGrid.addColumn(TradeUni::getSizeFormatted).setResizable(true).setWidth("45px");
+        tradesGrid.addColumn(TradeUni::getExchangeName).setResizable(true).setWidth("65px");
+        tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setWidth("100px");
+        tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setWidth("170px");
+
+
 //        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("Trade Price").setResizable(true);
 //        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("firstprice").setResizable(true).setWidth("24%");
 //        tradesGrid.addColumn(TradeUni::getLastPrice).setHeader("lastprice").setResizable(true).setWidth("24%");
-        tradesGrid.addColumn(TradeUni::getPriceWithGap).setHeader("Price").setResizable(true).setWidth("24%");
+
 //        tradesGrid.addColumn(TradeUni::getPriceGap).setHeader("Slippage").setResizable(true);
 //        tradesGrid.addColumn(TradeUni::getTimestamp).setHeader("Time").setResizable(true);
+
 
 
         tradesGrid.setColumnReorderingAllowed(true);
@@ -212,6 +224,12 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
                     System.out.println("adding updated trade");
                     trades.add(0, t);
 
+                    tradesGrid.getElement().getNode().markAsDirty();
+                    tradesGrid.getDataProvider().refreshAll();
+                }
+
+                if (trades.size() >= 250) {
+                    trades.remove(trades.size()-1);
                     tradesGrid.getElement().getNode().markAsDirty();
                     tradesGrid.getDataProvider().refreshAll();
                 }

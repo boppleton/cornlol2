@@ -1,19 +1,22 @@
-<custom-style>
-    <!-- This is where your App's styling should go. You can use .css files too. -->
-    <style>
-        .main-layout {
-            padding: 5px;
-        }
+<customstyle>
 
-        vaadin-text-field {
-            border: 1px solid gray;
-        }
+    <dom-module id="trades-grid" theme-for="vaadin-grid">
+        <template>
 
-        vaadin-text-field {
-            border: 1px solid gray;
-        }
+            <style>
+                [part="row"] {
+                    height: 27px;
+                    font-size: 14px;
+                    max-height: 27px;
+                }
+                /*[part~="cell"] {*/
+                    /*height: 51px;*/
+                    /*background-color: blue;*/
+                /*}*/
+
+            </style>
+        </template>
+    </dom-module>
 
 
-
-    </style>
-</custom-style>
+</customstyle>
