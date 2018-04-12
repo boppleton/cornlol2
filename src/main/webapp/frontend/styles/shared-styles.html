@@ -1,11 +1,23 @@
 <custom-style>
     <style>
-        .my-grid-cell.underten {
-            background-color: coral;
+
+        .my-grid-cell {
+            text-align: center;
+            text-align-all: center;
+            height: 17px;
+            font-size: 14px;
+
         }
 
-        .my-grid-cell.overten {
-            background-color: darkmagenta;
+        .my-grid-cell.buy {
+            background-color: lightgreen;
+            /*min-height: 15px;*/
+        }
+
+        .my-grid-cell.sell {
+            background-color: lightsalmon;
+            text-decoration-color: crimson;
+            /*min-height: fit-content;*/
         }
     </style>
 </custom-style>
@@ -19,9 +31,9 @@
 
             <style>
                 [part="row"] {
-                    height: 27px;
+                    /*height: 21px;*/
                     font-size: 14px;
-                    max-height: 27px;
+                    /*max-height: fit-content;*/
                 }
 
             </style>
@@ -36,7 +48,7 @@
         <template>
             <style>
                 [part~="cell"] {
-                    min-height: 0;
+                    /*min-height: 30px;*/
                 }
 
                 [part~="cell"] ::slotted(vaadin-grid-cell-content) {
@@ -50,7 +62,10 @@
         <style>
             .my-grid-cell {
                 min-height: calc(var(--lumo-size-m) - 2 * var(--lumo-space-xs));
+                /*max-height: 15px;*/
                 padding: var(--lumo-space-xs) var(--lumo-space-m);
+                /*padding: 0px;*/
+                /*position: center;*/
             }
         </style>
     </custom-style>

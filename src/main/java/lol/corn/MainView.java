@@ -167,19 +167,25 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         ValueProvider<TradeUni, String> cssClassProvider = (tradeUni) -> {
             String cssClass = "my-grid-cell";
-            if (tradeUni.getSize() < 10000) {
-                cssClass += " underten";
-            } else if (tradeUni.getSize() >= 10000) {
-                cssClass += " overten";
+            if (tradeUni.getSide().equals("Buy")) {
+                cssClass += " buy";
+            } else if (tradeUni.getSide().equals("Sell")) {
+                cssClass += " sell";
             }
             return cssClass;
         };
 
-
-        tradesGrid.addColumn(TemplateRenderer.<TradeUni>
+        TemplateRenderer<TradeUni> sizee = TemplateRenderer.<TradeUni>
                 of("<div class$=\"[[item.class]]\">[[item.size]]</div>")
                 .withProperty("class", cssClassProvider)
-                .withProperty("size", TradeUni::getSize));
+                .withProperty("size", TradeUni::getSize);
+
+//        <img src="https://i.imgur.com/3LQBglR.png">
+
+
+        Grid.Column<TradeUni> iconAmountColumn = tradesGrid.addColumn(sizee);
+
+        iconAmountColumn.setWidth("30px").setFlexGrow(1);
 //
 //        tradesGrid.addColumn(TemplateRenderer.<TradeUni> of("<b>[[item.side]]</b><i>[[item.price]]</i>")
 //                .withProperty("side", TradeUni::getSide)
@@ -188,9 +194,9 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
 //        Grid.Column<TradeUni> sideColumn = tradesGrid.addColumn(TradeUni::getSide).setResizable(true).setHeader("side").setFlexGrow(0);
 //        Grid.Column<TradeUni> sizeColumn = tradesGrid.addColumn(TradeUni::getSizeFormatted).setResizable(true).setHeader("amount").setFlexGrow(0);
-        Grid.Column<TradeUni> exchangeNameColumn = tradesGrid.addColumn(TradeUni::getExchangeName).setResizable(true).setHeader("exhange").setResizable(true).setFlexGrow(0);
-        Grid.Column<TradeUni> priceColumn = tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setHeader("price").setResizable(true).setFlexGrow(0);
-        Grid.Column<TradeUni> instrumentColumn = tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setHeader("instrument").setFlexGrow(0);
+//        Grid.Column<TradeUni> exchangeNameColumn = tradesGrid.addColumn(TradeUni::getExchangeName).setResizable(true).setResizable(true).setWidth("30px").setFlexGrow(1);
+//        Grid.Column<TradeUni> priceColumn = tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setResizable(true).setWidth("30px").setFlexGrow(1);
+        Grid.Column<TradeUni> instrumentColumn = tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setWidth("30px").setFlexGrow(1);
 //
 //        tradesGrid.addColumn(new NumberRenderer<>(TradeUni::getPrice,
 //                NumberFormat.getCurrencyInstance())).setHeader("Price");
