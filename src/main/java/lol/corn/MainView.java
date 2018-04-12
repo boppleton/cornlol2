@@ -6,6 +6,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.grid.ColumnGroup;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcons;
@@ -15,7 +16,8 @@ import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.data.renderer.*;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.*;
 import com.vaadin.flow.theme.Theme;
@@ -31,6 +33,9 @@ import lol.corn.utils.WebsocketSetup;
 
 import java.awt.*;
 import java.net.URISyntaxException;
+import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -160,13 +165,35 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private void setupTradesGrid() {
         tradesGrid.setItems(trades);
 
+        ValueProvider<TradeUni, String> cssClassProvider = (tradeUni) -> {
+            String cssClass = "my-grid-cell";
+            if (tradeUni.getSize() < 10000) {
+                cssClass += " underten";
+            } else if (tradeUni.getSize() >= 10000) {
+                cssClass += " overten";
+            }
+            return cssClass;
+        };
 
 
-        Grid.Column<TradeUni> sideColumn = tradesGrid.addColumn(TradeUni::getSide).setResizable(true).setHeader("side").setFlexGrow(0);
-        Grid.Column<TradeUni> sizeColumn = tradesGrid.addColumn(TradeUni::getSizeFormatted).setResizable(true).setHeader("amount").setFlexGrow(0);
+        tradesGrid.addColumn(TemplateRenderer.<TradeUni>
+                of("<div class$=\"[[item.class]]\">[[item.size]]</div>")
+                .withProperty("class", cssClassProvider)
+                .withProperty("size", TradeUni::getSize));
+//
+//        tradesGrid.addColumn(TemplateRenderer.<TradeUni> of("<b>[[item.side]]</b><i>[[item.price]]</i>")
+//                .withProperty("side", TradeUni::getSide)
+//                .withProperty("price", TradeUni::getPrice))
+//                .setHeader("Side");
+
+//        Grid.Column<TradeUni> sideColumn = tradesGrid.addColumn(TradeUni::getSide).setResizable(true).setHeader("side").setFlexGrow(0);
+//        Grid.Column<TradeUni> sizeColumn = tradesGrid.addColumn(TradeUni::getSizeFormatted).setResizable(true).setHeader("amount").setFlexGrow(0);
         Grid.Column<TradeUni> exchangeNameColumn = tradesGrid.addColumn(TradeUni::getExchangeName).setResizable(true).setHeader("exhange").setResizable(true).setFlexGrow(0);
         Grid.Column<TradeUni> priceColumn = tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setHeader("price").setResizable(true).setFlexGrow(0);
         Grid.Column<TradeUni> instrumentColumn = tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setHeader("instrument").setFlexGrow(0);
+//
+//        tradesGrid.addColumn(new NumberRenderer<>(TradeUni::getPrice,
+//                NumberFormat.getCurrencyInstance())).setHeader("Price");
 
 
 
