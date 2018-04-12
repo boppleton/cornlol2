@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.HtmlImport;
+import com.vaadin.flow.component.grid.ColumnGroup;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -63,24 +64,24 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-        bitfinexClient = new BitfinexClient();
-        bitfinexClient.connectBlocking();
-        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+//        bitfinexClient = new BitfinexClient();
+//        bitfinexClient.connectBlocking();
+//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-        okexClient = new OkexClient();
-        okexClient.connectBlocking();
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+//        okexClient = new OkexClient();
+//        okexClient.connectBlocking();
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
         WebsocketSetup.bitmexConnect();
         WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
 
-        binanceClient = new BinanceClient("btcusdt@aggTrade");
-        binanceClient.connectBlocking();
+//        binanceClient = new BinanceClient("btcusdt@aggTrade");
+//        binanceClient.connectBlocking();
 
 
         setClassName("main-layout");
@@ -159,11 +160,19 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private void setupTradesGrid() {
         tradesGrid.setItems(trades);
 
-//        tradesGrid.addColumn(TradeUni::getSide).setResizable(true).setWidth("35px");
-        tradesGrid.addColumn(TradeUni::getSizeFormatted).setResizable(true).setWidth("45px");
-        tradesGrid.addColumn(TradeUni::getExchangeName).setResizable(true).setWidth("65px");
-        tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setWidth("100px");
-        tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setWidth("170px");
+
+
+        Grid.Column<TradeUni> sideColumn = tradesGrid.addColumn(TradeUni::getSide).setResizable(true).setHeader("side").setFlexGrow(0);
+        Grid.Column<TradeUni> sizeColumn = tradesGrid.addColumn(TradeUni::getSizeFormatted).setResizable(true).setHeader("amount").setFlexGrow(0);
+        Grid.Column<TradeUni> exchangeNameColumn = tradesGrid.addColumn(TradeUni::getExchangeName).setResizable(true).setHeader("exhange").setResizable(true).setFlexGrow(0);
+        Grid.Column<TradeUni> priceColumn = tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setHeader("price").setResizable(true).setFlexGrow(0);
+        Grid.Column<TradeUni> instrumentColumn = tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setHeader("instrument").setFlexGrow(0);
+
+
+
+
+
+
 
 
 //        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("Trade Price").setResizable(true);
