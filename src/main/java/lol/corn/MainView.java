@@ -165,6 +165,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private void setupTradesGrid() {
         tradesGrid.setItems(trades);
 
+
         ValueProvider<TradeUni, String> cssClassProvider = (tradeUni) -> {
             String cssClass = "my-grid-cell";
             if (tradeUni.getSide().equals("Buy")) {
@@ -178,7 +179,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         TemplateRenderer<TradeUni> sizee = TemplateRenderer.<TradeUni>
                 of("<div class$=\"[[item.class]]\">[[item.size]]</div>")
                 .withProperty("class", cssClassProvider)
-                .withProperty("size", TradeUni::getSize);
+                .withProperty("size", TradeUni::getSizeFormatted);
 
 //        <img src="https://i.imgur.com/3LQBglR.png">
 

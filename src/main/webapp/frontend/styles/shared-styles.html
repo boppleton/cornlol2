@@ -4,20 +4,24 @@
         .my-grid-cell {
             text-align: center;
             text-align-all: center;
-            height: 17px;
-            font-size: 14px;
+            /*height: 15px;*/
+            /*max-height: fit-content;*/
 
         }
 
         .my-grid-cell.buy {
             background-color: lightgreen;
-            /*min-height: 15px;*/
+            /*height: 16px;*/
+            font-size: 17px;
+            /*padding: 0px;*/
         }
 
         .my-grid-cell.sell {
             background-color: lightsalmon;
             text-decoration-color: crimson;
-            /*min-height: fit-content;*/
+            /*height: 17px;*/
+            font-size: 17px;
+            /*padding: 0px;*/
         }
     </style>
 </custom-style>
@@ -31,8 +35,8 @@
 
             <style>
                 [part="row"] {
-                    /*height: 21px;*/
-                    font-size: 14px;
+                    /*height: 14px;*/
+                    /*font-size: 14px;*/
                     /*max-height: fit-content;*/
                 }
 
@@ -48,11 +52,12 @@
         <template>
             <style>
                 [part~="cell"] {
-                    /*min-height: 30px;*/
+                    /*height: 12px;*/
                 }
 
                 [part~="cell"] ::slotted(vaadin-grid-cell-content) {
                     padding: 0;
+                    /*height: 11px;*/
                 }
             </style>
         </template>
@@ -61,6 +66,7 @@
     <custom-style>
         <style>
             .my-grid-cell {
+                /*height: 10px;*/
                 min-height: calc(var(--lumo-size-m) - 2 * var(--lumo-space-xs));
                 /*max-height: 15px;*/
                 padding: var(--lumo-space-xs) var(--lumo-space-m);
