@@ -86,7 +86,7 @@ public class BitmexClient extends Client {
                 t.setExchangeName("bitmex");
                 t.setInstrument(instrument);
                 t.setSize(trade.getSize());
-                t.setSide(trade.getSide());
+                t.setSide(trade.getSide().equals("Buy"));
                 t.setPrice(trade.getPrice());
                 t.setTimestamp(String.valueOf(trade.getTimestamp()));
 

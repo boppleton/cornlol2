@@ -12,7 +12,7 @@ public class TradeUni {
     private String exchangeName;
     private String instrument;
     private double size;
-    private String side;
+    private boolean side;
     private double price;
     private String timestamp;
     private String id;
@@ -32,7 +32,7 @@ public class TradeUni {
     }
 
 
-    public TradeUni(String exchangeName, String instrument, double size, String side, double price, String timestamp, String id) {
+    public TradeUni(String exchangeName, String instrument, double size, boolean side, double price, String timestamp, String id) {
         this.exchangeName = exchangeName;
         this.instrument = instrument;
         this.size = size;
@@ -91,10 +91,10 @@ public class TradeUni {
     }
 
     // side
-    public String getSide() {
+    public boolean getSide() {
         return side;
     }
-    public void setSide(String side) {
+    public void setSide(boolean side) {
         this.side = side;
     }
 

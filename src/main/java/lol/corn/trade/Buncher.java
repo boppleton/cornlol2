@@ -19,7 +19,7 @@ public class Buncher {
         }
 
         //if there is a bunch, and this trade has same timestamp/type
-        else if (trade.getTimestamp().equals(bunch.getTimestamp()) && trade.getSide().equals(bunch.getSide()) && exchangeSpecificCondition(trade, bunch)) {
+        else if (trade.getTimestamp().equals(bunch.getTimestamp()) && trade.getSide() == (bunch.getSide()) && exchangeSpecificCondition(trade, bunch)) {
 
             //add this trade to current bunch
             bunch.setSize(bunch.getSize() + trade.getSize());

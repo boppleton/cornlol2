@@ -63,7 +63,7 @@ public class BitfinexClient extends Client {
 
         try {
 
-            System.out.println("\n\n" + message);
+//            System.out.println("\n\n" + message);
 
 
 
@@ -85,7 +85,7 @@ public class BitfinexClient extends Client {
             t.setExchangeName("bitfinex");
             t.setInstrument("Spot");
             t.setSize(Math.abs(te.amount) * te.price);
-            t.setSide(te.amount > 0 ? "buy" : "sell");
+            t.setSide(te.amount > 0);
             t.setPrice(te.price);
             t.setTimestamp(String.valueOf(te.timestamp));
 

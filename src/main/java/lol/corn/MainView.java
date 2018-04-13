@@ -69,9 +69,9 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-        bitfinexClient = new BitfinexClient();
-        bitfinexClient.connectBlocking();
-        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+//        bitfinexClient = new BitfinexClient();
+//        bitfinexClient.connectBlocking();
+//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
         okexClient = new OkexClient();
         okexClient.connectBlocking();
@@ -80,13 +80,13 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
         okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
-        WebsocketSetup.bitmexConnect();
-        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
-        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+//        WebsocketSetup.bitmexConnect();
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
+//        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
 
-        binanceClient = new BinanceClient("btcusdt@aggTrade");
-        binanceClient.connectBlocking();
+//        binanceClient = new BinanceClient("btcusdt@aggTrade");
+//        binanceClient.connectBlocking();
 
 
         setClassName("main-layout");
@@ -168,16 +168,16 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         ValueProvider<TradeUni, String> cssClassProvider = (tradeUni) -> {
             String cssClass = "my-grid-cell";
-            if (tradeUni.getSide().equals("Buy")) {
+            if (tradeUni.getSide()) {
                 cssClass += " buy";
-            } else if (tradeUni.getSide().equals("Sell")) {
+            } else if (!tradeUni.getSide()) {
                 cssClass += " sell";
             }
             return cssClass;
         };
 
         TemplateRenderer<TradeUni> sizee = TemplateRenderer.<TradeUni>
-                of("<div class$=\"[[item.class]]\">[[item.size]]</div>")
+                of("<div class$=\"[[item.class]]\"><img src=\"https://i.imgur.com/3LQBglR.png\">  [[item.size]]</div>")
                 .withProperty("class", cssClassProvider)
                 .withProperty("size", TradeUni::getSizeFormatted);
 
@@ -239,7 +239,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         double lastPrice = Double.parseDouble(message.substring(message.indexOf("=") + 1, message.lastIndexOf("=")));
         System.out.println(lastPrice);
 
-        TradeUni t = new TradeUni(exchangeName, instrument, size, side, price, timestamp, "id");
+        TradeUni t = new TradeUni(exchangeName, instrument, size, side.equals("true"), price, timestamp, "id");
         t.setUpdate(update);
         t.setSizeFormatted(AmountFormat.coolFormat(t.getSize(), 0));
         t.setFirstPrice(firstPrice);

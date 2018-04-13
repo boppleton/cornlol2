@@ -95,7 +95,7 @@ public class OkexClient extends Client {//todo: remove first pushes by checking 
 
                     TradeUni t = new TradeUni();
                 t.setExchangeName("okex");
-                    t.setSide(trades.get(i).get(4));
+                    t.setSide(trades.get(i).get(4).equals("bid"));
                     t.setPrice(Double.valueOf(trades.get(i).get(1)));
                     t.setInstrument(instrument);
                     t.setSize(message.contains("future") ? (Double.parseDouble(trades.get(i).get(2))*100) : Double.parseDouble(trades.get(i).get(2))* t.getPrice());

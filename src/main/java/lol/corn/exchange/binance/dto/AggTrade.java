@@ -139,9 +139,7 @@ public class AggTrade {
     }
 
     @JsonProperty("m")
-    public String getSide() {
-        return buyMaker ? "ask" : "bid";
-    }
+    public boolean getSide() { return !buyMaker; }
 
     @JsonProperty("m")
     public void setSide(Boolean buyMaker) {
