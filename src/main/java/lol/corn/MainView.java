@@ -69,24 +69,24 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-//        bitfinexClient = new BitfinexClient();
-//        bitfinexClient.connectBlocking();
-//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+        bitfinexClient = new BitfinexClient();
+        bitfinexClient.connectBlocking();
+        bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-//        okexClient = new OkexClient();
-//        okexClient.connectBlocking();
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+        okexClient = new OkexClient();
+        okexClient.connectBlocking();
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
         WebsocketSetup.bitmexConnect();
         WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
-//        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
-//        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
+        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
 
-//        binanceClient = new BinanceClient("btcusdt@aggTrade");
-//        binanceClient.connectBlocking();
+        binanceClient = new BinanceClient("btcusdt@aggTrade");
+        binanceClient.connectBlocking();
 
 
         setClassName("main-layout");
@@ -196,7 +196,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 //        Grid.Column<TradeUni> sideColumn = tradesGrid.addColumn(TradeUni::getSide).setResizable(true).setHeader("side").setFlexGrow(0);
 //        Grid.Column<TradeUni> sizeColumn = tradesGrid.addColumn(TradeUni::getSizeFormatted).setResizable(true).setHeader("amount").setFlexGrow(0);
 //        Grid.Column<TradeUni> exchangeNameColumn = tradesGrid.addColumn(TradeUni::getExchangeName).setResizable(true).setResizable(true).setWidth("30px").setFlexGrow(1);
-//        Grid.Column<TradeUni> priceColumn = tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setResizable(true).setWidth("30px").setFlexGrow(1);
+        Grid.Column<TradeUni> priceColumn = tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setResizable(true).setWidth("30px").setFlexGrow(1);
         Grid.Column<TradeUni> instrumentColumn = tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setWidth("30px").setFlexGrow(1);
 //
 //        tradesGrid.addColumn(new NumberRenderer<>(TradeUni::getPrice,
