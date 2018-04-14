@@ -17,12 +17,11 @@ public class TradeUni {
     private String timestamp;
     private String id;
     private boolean update = false;
-
+    private double slip;
 
 
     private double firstPrice;
     private double lastPrice;
-
 
 
     private String sizeFormatted;
@@ -49,24 +48,55 @@ public class TradeUni {
 
         switch (exchangeName) {
             case "bitmex":
-                icon =  "https://i.imgur.com/3LQBglR.png";
+                icon = "https://i.imgur.com/3LQBglR.png";
                 break;
             case "bitfinex":
-                icon =  "https://i.imgur.com/7CNGpKm.png";
-            break;
+                icon = "https://i.imgur.com/7CNGpKm.png";
+                break;
             case "okex":
-                icon =  "https://i.imgur.com/9jX2ikO.png";
-            break;
+                icon = "https://i.imgur.com/9jX2ikO.png";
+                break;
             case "binance":
-                icon =  "https://i.imgur.com/nbRCbWo.png";
-            break;
+                icon = "https://i.imgur.com/nbRCbWo.png";
+                break;
             default:
                 icon = "";
                 break;
-            }
-
-            return icon;
         }
+
+        return icon;
+    }
+
+    public double getSlip() {
+
+        slip = lastPrice-firstPrice;
+
+        return slip;
+//
+//        System.out.println(lastPrice + " - " + firstPrice + "gap: " + gap);
+//
+//        String gapString;
+//
+//        System.out.println(gap);
+////
+//        if (slip == 0) {
+//            gapString = "";
+//        } else if (gap >= 1) {
+//            gapString = String.format("+ %.1f", gap);
+//        } else if (gap <= 1){
+//            gapString = String.format("- %.1f", Math.abs(gap));
+//        } else {
+//            gapString = "";
+//        }
+//
+//        return !gapString.equals("") ? String.format("%.1f (%s)", firstPrice, gapString) : String.format("%.1f", firstPrice);
+
+
+        }
+
+
+
+
 
 
 

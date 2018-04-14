@@ -180,10 +180,11 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
 
         TemplateRenderer<TradeUni> sizee = TemplateRenderer.<TradeUni>
-                of("<div class$='[[item.class]]'><img src='[[item.icon]]'>[[item.size]]</div>")
+                of("<div class$='[[item.class]]'><img src='[[item.icon]]'> [[item.size]] [[item.slip]]</div>")
                 .withProperty("class", cssClassProvider)
                 .withProperty("icon", TradeUni::getIcon)
-                .withProperty("size", TradeUni::getSizeFormatted);
+                .withProperty("size", TradeUni::getSizeFormatted)
+                .withProperty("slip", TradeUni::getSlip);
 
 //        <img src="https://i.imgur.com/3LQBglR.png">
 
