@@ -69,21 +69,21 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         registerBroadcastListener();
 
-//        bitfinexClient = new BitfinexClient();
-//        bitfinexClient.connectBlocking();
-//        bitfinexClient.subscribe(true, "trades", "BTCUSD");
+        bitfinexClient = new BitfinexClient();
+        bitfinexClient.connectBlocking();
+        bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-//        okexClient = new OkexClient();
-//        okexClient.connectBlocking();
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
-//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+        okexClient = new OkexClient();
+        okexClient.connectBlocking();
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
-//        WebsocketSetup.bitmexConnect();
-//        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
-//        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
-//        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
+        WebsocketSetup.bitmexConnect();
+        WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
+        WebsocketSetup.bitmexSubscribe("trade", "XBTM18", true);
+        WebsocketSetup.bitmexSubscribe("trade", "XBTU18", true);
 
         binanceClient = new BinanceClient("btcusdt@aggTrade");
         binanceClient.connectBlocking();
@@ -176,9 +176,13 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
             return cssClass;
         };
 
+
+
+
         TemplateRenderer<TradeUni> sizee = TemplateRenderer.<TradeUni>
-                of("<div class$=\"[[item.class]]\"><img src=\"https://i.imgur.com/3LQBglR.png\">  [[item.size]]</div>")
+                of("<div class$='[[item.class]]'><img src='[[item.icon]]'>[[item.size]]</div>")
                 .withProperty("class", cssClassProvider)
+                .withProperty("icon", TradeUni::getIcon)
                 .withProperty("size", TradeUni::getSizeFormatted);
 
 //        <img src="https://i.imgur.com/3LQBglR.png">
