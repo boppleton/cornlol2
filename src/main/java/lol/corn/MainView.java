@@ -61,6 +61,8 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
     private static int minAmount = 25000;
 
+    public static double minSlipToShow = 2;
+
 
     public MainView() throws URISyntaxException, InterruptedException {
         setupLayout();
@@ -73,12 +75,12 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         bitfinexClient.connectBlocking();
         bitfinexClient.subscribe(true, "trades", "BTCUSD");
 
-        okexClient = new OkexClient();
-        okexClient.connectBlocking();
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
-        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
+//        okexClient = new OkexClient();
+//        okexClient.connectBlocking();
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_spot_btc_usdt_deals'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_this_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_next_week'}");
+//        okexClient.send("{'event':'addChannel','channel':'ok_sub_futureusd_btc_trade_quarter'}");
 
         WebsocketSetup.bitmexConnect();
         WebsocketSetup.bitmexSubscribe("trade", "XBTUSD", true);
@@ -191,17 +193,17 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         Grid.Column<TradeUni> iconAmountColumn = tradesGrid.addColumn(sizee);
 
-        iconAmountColumn.setWidth("30px").setFlexGrow(1);
+        iconAmountColumn.setWidth("30px").setResizable(true).setFlexGrow(1);
 //
 //        tradesGrid.addColumn(TemplateRenderer.<TradeUni> of("<b>[[item.side]]</b><i>[[item.price]]</i>")
 //                .withProperty("side", TradeUni::getSide)
 //                .withProperty("price", TradeUni::getPrice))
 //                .setHeader("Side");
 
-        Grid.Column<TradeUni> sideColumn = tradesGrid.addColumn(TradeUni::getSide).setResizable(true).setHeader("side").setFlexGrow(1);
+//        Grid.Column<TradeUni> sideColumn = tradesGrid.addColumn(TradeUni::getSide).setResizable(true).setHeader("side").setFlexGrow(1);
 //        Grid.Column<TradeUni> sizeColumn = tradesGrid.addColumn(TradeUni::getSizeFormatted).setResizable(true).setHeader("amount").setFlexGrow(0);
 //        Grid.Column<TradeUni> exchangeNameColumn = tradesGrid.addColumn(TradeUni::getExchangeName).setResizable(true).setResizable(true).setWidth("30px").setFlexGrow(1);
-        Grid.Column<TradeUni> priceColumn = tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setResizable(true).setWidth("30px").setFlexGrow(1);
+//        Grid.Column<TradeUni> priceColumn = tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setResizable(true).setWidth("30px").setFlexGrow(1);
         Grid.Column<TradeUni> instrumentColumn = tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setWidth("30px").setFlexGrow(1);
 //
 //        tradesGrid.addColumn(new NumberRenderer<>(TradeUni::getPrice,
@@ -214,12 +216,12 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
 
 
-        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("Trade Price").setResizable(true).setFlexGrow(1);
-        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("firstprice").setResizable(true).setFlexGrow(1);
-        tradesGrid.addColumn(TradeUni::getLastPrice).setHeader("lastprice").setResizable(true).setFlexGrow(1);
+//        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("Trade Price").setResizable(true).setFlexGrow(1);
+//        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("firstprice").setResizable(true).setFlexGrow(1);
+//        tradesGrid.addColumn(TradeUni::getLastPrice).setHeader("lastprice").setResizable(true).setFlexGrow(1);
 
 
-        tradesGrid.addColumn(TradeUni::getTimestamp).setHeader("Time").setResizable(true).setFlexGrow(1);
+//        tradesGrid.addColumn(TradeUni::getTimestamp).setHeader("Time").setResizable(true).setFlexGrow(1);
 
 
 

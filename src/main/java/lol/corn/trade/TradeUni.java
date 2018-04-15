@@ -1,6 +1,8 @@
 package lol.corn.trade;
 
 
+import lol.corn.MainView;
+
 import java.text.DecimalFormat;
 
 public class TradeUni {
@@ -17,7 +19,7 @@ public class TradeUni {
     private String timestamp;
     private String id;
     private boolean update = false;
-    private double slip;
+    private String slip;
 
 
     private double firstPrice;
@@ -67,9 +69,21 @@ public class TradeUni {
         return icon;
     }
 
-    public double getSlip() {
+    public String getSlip() {
 
-        slip = lastPrice-firstPrice;
+        double slipDub;
+        String slip = "";
+
+        slipDub = lastPrice-firstPrice;
+
+
+        if (slipDub >= MainView.minSlipToShow) {
+            slip = "up " + slipDub;
+            return slip;
+        } else if (slipDub <= -MainView.minSlipToShow) {
+            slip = "down " + slipDub;
+            return slip;
+        }
 
         return slip;
 //
