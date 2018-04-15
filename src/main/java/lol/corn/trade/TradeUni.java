@@ -69,19 +69,21 @@ public class TradeUni {
         return icon;
     }
 
-    public String getSlip() {
+    public String getSlipIcon() {
+        //wow clean this lol
 
         double slipDub;
         String slip = "";
+        String up = "https://i.imgur.com/n38F1Tw.png";
+        String down = "https://i.imgur.com/uTbeZbt.png";
 
         slipDub = lastPrice-firstPrice;
 
-
         if (slipDub >= MainView.minSlipToShow) {
-            slip = "up " + slipDub;
+            slip = up;
             return slip;
         } else if (slipDub <= -MainView.minSlipToShow) {
-            slip = "down " + slipDub;
+            slip = down;
             return slip;
         }
 
@@ -105,16 +107,30 @@ public class TradeUni {
 //
 //        return !gapString.equals("") ? String.format("%.1f (%s)", firstPrice, gapString) : String.format("%.1f", firstPrice);
 
+    }
 
+
+
+    public String getSlip() {
+
+        double slipDub = lastPrice-firstPrice;
+
+        String slip = "";
+
+        if (slipDub >= MainView.minSlipToShow) {
+            slip = String.format("%.0f", slipDub);
+            return slip;
+        } else if (slipDub <= -MainView.minSlipToShow) {
+            slip = String.format("%.0f", -slipDub);
+            return slip;
+        } else {
+            return slip;
         }
+    }
 
 
 
-
-
-
-
-
+    //remove thyslef?
     public String getPriceWithGap() {
 
         double gap = lastPrice-firstPrice;
