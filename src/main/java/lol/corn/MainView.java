@@ -153,13 +153,6 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     }
 
 
-    public void setMinAmount(int minAmount) {
-        MainView.minAmount = minAmount;
-    }
-
-    public static int getMinAmount() {
-        return minAmount;
-    }
 
     private void setupTradesGrid() {
         tradesGrid.setItems(trades);
@@ -187,42 +180,12 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
                 .withProperty("price", TradeUni::getPrice)
                 .withProperty("slip", TradeUni::getSlip);
 
-//        <img src="https://i.imgur.com/3LQBglR.png">
-
 
         Grid.Column<TradeUni> iconAmountColumn = tradesGrid.addColumn(sizee);
 
 
         iconAmountColumn.setWidth("150px").setResizable(true).setHeader("trade").setFlexGrow(1).setWidth("30px");
-//
-//        tradesGrid.addColumn(TemplateRenderer.<TradeUni> of("<b>[[item.side]]</b><i>[[item.price]]</i>")
-//                .withProperty("side", TradeUni::getSide)
-//                .withProperty("price", TradeUni::getPrice))
-//                .setHeader("Side");
-
-//        Grid.Column<TradeUni> sideColumn = tradesGrid.addColumn(TradeUni::getSide).setResizable(true).setHeader("side").setFlexGrow(1);
-//        Grid.Column<TradeUni> sizeColumn = tradesGrid.addColumn(TradeUni::getSizeFormatted).setResizable(true).setHeader("amount").setFlexGrow(0);
-//        Grid.Column<TradeUni> exchangeNameColumn = tradesGrid.addColumn(TradeUni::getExchangeName).setResizable(true).setResizable(true).setWidth("30px").setFlexGrow(1);
-//        Grid.Column<TradeUni> priceColumn = tradesGrid.addColumn(TradeUni::getPriceWithGap).setResizable(true).setResizable(true).setWidth("30px").setFlexGrow(1);
         Grid.Column<TradeUni> instrumentColumn = tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setWidth("150px").setFlexGrow(1).setHeader("instrument");
-//
-//        tradesGrid.addColumn(new NumberRenderer<>(TradeUni::getPrice,
-//                NumberFormat.getCurrencyInstance())).setHeader("Price");
-
-
-
-
-
-
-//        tradesGrid.addColumn(TradeUni::getSlipIcon).setHeader("slip").setResizable(true).setFlexGrow(1);
-
-//        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("Trade Price").setResizable(true).setFlexGrow(1);
-//        tradesGrid.addColumn(TradeUni::getFirstPrice).setHeader("firstprice").setResizable(true).setFlexGrow(1);
-//        tradesGrid.addColumn(TradeUni::getLastPrice).setHeader("lastprice").setResizable(true).setFlexGrow(1);
-
-
-//        tradesGrid.addColumn(TradeUni::getTimestamp).setHeader("Time").setResizable(true).setFlexGrow(1);
-
 
 
         tradesGrid.setColumnReorderingAllowed(true);
@@ -266,7 +229,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
                     trades.add(0, t);
                     tradesGrid.getElement().getNode().markAsDirty();
-                    tradesGrid.getDataProvider().refreshAll();
+                    tradesGrid.getDataProvider().refreshItem(t);
 
                 } else {
                     System.out.println("removing index 0 trade");
@@ -278,7 +241,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
                     tradesGrid.getDataProvider().refreshAll();
                 }
 
-                if (trades.size() >= 250) {
+                if (trades.size() >= 50) {
                     trades.remove(trades.size()-1);
                     tradesGrid.getElement().getNode().markAsDirty();
                     tradesGrid.getDataProvider().refreshAll();
@@ -295,4 +258,17 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
     private void registerBroadcastListener() {
         Broadcaster.register(this);
     }
+
+
+
+
+    public void setMinAmount(int minAmount) {
+        MainView.minAmount = minAmount;
+    }
+
+    public static int getMinAmount() {
+        return minAmount;
+    }
+
+
 }
