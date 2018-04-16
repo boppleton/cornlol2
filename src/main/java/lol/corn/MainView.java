@@ -4,8 +4,10 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.HtmlImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.ColumnGroup;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -15,6 +17,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.*;
 import com.vaadin.flow.function.ValueProvider;
@@ -31,14 +35,18 @@ import lol.corn.utils.AmountFormat;
 import lol.corn.utils.Broadcaster;
 import lol.corn.utils.WebsocketSetup;
 
+import com.vaadin.flow.component.dialog.*;
 import java.awt.*;
+
 import java.net.URISyntaxException;
 import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 @Push
 @BodySize(height = "100vh", width = "100vw")
@@ -122,6 +130,16 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         Button settingsButton = new Button("Settings");
         settingsButton.setSizeUndefined();
+        Dialog dialog = new Dialog();
+
+        ComboBox<String> combobox = new ComboBox<>();
+        combobox.setItems("first", "sendonc", "third");
+        dialog.add(combobox);
+
+
+        settingsButton.addClickListener(event -> dialog.open());
+
+
         underTickerSettings.add(minAmountField, settingsButton);
         underTickerSettings.setVerticalComponentAlignment(FlexComponent.Alignment.END, settingsButton);
 
@@ -164,6 +182,9 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
                 cssClass += " buy";
             } else if (!tradeUni.getSide()) {
                 cssClass += " sell";
+            }
+            if (tradeUni.getSize() > 20000) {
+                cssClass += " overone";
             }
             return cssClass;
         };
