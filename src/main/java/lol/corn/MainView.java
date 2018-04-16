@@ -113,6 +113,9 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         HorizontalLayout underTickerSettings = new HorizontalLayout();
 
 
+
+
+
         minAmountField = new TextField("minimum trade:");
         minAmountField.setPreventInvalidInput(true);
         minAmountField.setErrorMessage("errorlol");
@@ -128,7 +131,7 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
 
 
-        Button settingsButton = new Button("Settings");
+        Button settingsButton = new Button("+");
         settingsButton.setSizeUndefined();
         Dialog dialog = new Dialog();
 
@@ -139,19 +142,30 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
 
         settingsButton.addClickListener(event -> dialog.open());
 
+        ComboBox<String> instrumentsComboBox = new ComboBox<>();
+        instrumentsComboBox.setLabel("instruments:");
 
-        underTickerSettings.add(minAmountField, settingsButton);
-        underTickerSettings.setVerticalComponentAlignment(FlexComponent.Alignment.END, settingsButton);
 
+        underTickerSettings.add(minAmountField, instrumentsComboBox, settingsButton);
+        underTickerSettings.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
         sideGridSplit.setSizeFull();
         sideGridSplit.setOrientation(Orientation.VERTICAL);
         sideGridSplit.addToPrimary(tradesGrid);
         sideGridSplit.addToSecondary(underTickerSettings);
         sideGridSplit.setSplitterPosition(90);
 
+        SplitLayout gridAndTop = new SplitLayout();
+        gridAndTop.setOrientation(Orientation.VERTICAL);
+        Button topTestVolBtn = new Button("volume here");
+
+        gridAndTop.addToPrimary(topTestVolBtn);
+        gridAndTop.addToSecondary(sideGridSplit);
+
+
+
         mainSplit.setSizeFull();
-        mainSplit.addToPrimary(sideGridSplit);
-        mainSplit.addToSecondary(new ComboBox<String>());
+        mainSplit.addToPrimary(gridAndTop);
+        mainSplit.addToSecondary(new Label("right side"));
         mainSplit.setSplitterPosition(20);
     }
 
@@ -183,8 +197,15 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
             } else if (!tradeUni.getSide()) {
                 cssClass += " sell";
             }
-            if (tradeUni.getSize() > 20000) {
+            if (tradeUni.getSize() > 200000) {
+                cssClass += " overthree";
+                return cssClass;
+            } else if  (tradeUni.getSize() > 30000) {
+                cssClass += " overtwo";
+                return cssClass;
+            } else if  (tradeUni.getSize() > 10000) {
                 cssClass += " overone";
+                return cssClass;
             }
             return cssClass;
         };
@@ -205,8 +226,8 @@ public class MainView extends SplitLayout implements Broadcaster.BroadcastListen
         Grid.Column<TradeUni> iconAmountColumn = tradesGrid.addColumn(sizee);
 
 
-        iconAmountColumn.setWidth("150px").setResizable(true).setHeader("trade").setFlexGrow(1).setWidth("30px");
-        Grid.Column<TradeUni> instrumentColumn = tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setWidth("150px").setFlexGrow(1).setHeader("instrument");
+        iconAmountColumn.setWidth("150px").setResizable(true).setFlexGrow(1).setWidth("30px");
+        Grid.Column<TradeUni> instrumentColumn = tradesGrid.addColumn(TradeUni::getInstrument).setResizable(true).setWidth("150px").setFlexGrow(1);
 
 
         tradesGrid.setColumnReorderingAllowed(true);
